@@ -99,7 +99,7 @@ class _ConnectionTabPageState extends State<ConnectionTabPage> {
       _update_remote_count();
     }
     tabController.onRemoved = (_, id) => onRemoveId(id);
-    rustDeskWinManager.setMethodHandler(_remoteMethodHandler);
+    cloudyDeskWinManager.setMethodHandler(_remoteMethodHandler);
   }
 
   @override

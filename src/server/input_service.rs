@@ -454,7 +454,7 @@ const MOUSE_ACTIVE_DISTANCE: i32 = 5;
 
 static RECORD_CURSOR_POS_RUNNING: AtomicBool = AtomicBool::new(false);
 
-// https://github.com/rustdesk/rustdesk/issues/9729
+// https://github.com/cloudydesk/cloudydesk/issues/9729
 // We need to do some special handling for macOS when using the legacy mode.
 #[cfg(target_os = "macos")]
 static LAST_KEY_LEGACY_MODE: AtomicBool = AtomicBool::new(true);
@@ -533,15 +533,15 @@ impl VirtualInputState {
             CGEventSourceStateID::CombinedSessionState,
             // Note: `CGEventTapLocation::Session` will be affected by the mouse events.
             // When we're simulating key events, then move the physical mouse, the key events will be affected.
-            // It looks like https://github.com/rustdesk/rustdesk/issues/9729#issuecomment-2432306822
-            // 1. Press "Command" key in RustDesk
+            // It looks like https://github.com/cloudydesk/cloudydesk/issues/9729#issuecomment-2432306822
+            // 1. Press "Command" key in CloudyDesk
             // 2. Move the physical mouse
-            // 3. Press "V" key in RustDesk
+            // 3. Press "V" key in CloudyDesk
             // Then the controlled side just prints "v" instead of pasting.
             //
             // Changing `CGEventTapLocation::Session` to `CGEventTapLocation::HID` fixes it.
             // But we do not consider this as a bug, because it's not a common case,
-            // we consider only RustDesk operates the controlled side.
+            // we consider only CloudyDesk operates the controlled side.
             //
             // https://developer.apple.com/documentation/coregraphics/cgeventtaplocation/
             CGEventTapLocation::Session,
@@ -670,11 +670,11 @@ fn is_pressed(key: &Key, en: &mut Enigo) -> bool {
 #[inline]
 #[cfg(target_os = "macos")]
 fn key_sleep() {
-    // https://www.reddit.com/r/rustdesk/comments/1kn1w5x/typing_lags_when_connecting_to_macos_clients/
+    // https://www.reddit.com/r/cloudydesk/comments/1kn1w5x/typing_lags_when_connecting_to_macos_clients/
     //
     // There's a strange bug when running by `launchctl load -w /Library/LaunchAgents/abc.plist`
     // `std::thread::sleep(Duration::from_millis(20));` may sleep 90ms or more.
-    // Though `/Applications/RustDesk.app/Contents/MacOS/rustdesk --server` in terminal is ok.
+    // Though `/Applications/CloudyDesk.app/Contents/MacOS/cloudydesk --server` in terminal is ok.
     let now = Instant::now();
     while now.elapsed() < Duration::from_millis(12) {
         std::thread::sleep(Duration::from_millis(1));
@@ -683,7 +683,7 @@ fn key_sleep() {
 
 #[inline]
 fn get_modifier_state(key: Key, en: &mut Enigo) -> bool {
-    // https://github.com/rustdesk/rustdesk/issues/332
+    // https://github.com/cloudydesk/cloudydesk/issues/332
     // on Linux, if RightAlt is down, RightAlt status is false, Alt status is true
     // but on Windows, both are true
     let x = en.get_key_state(key.clone());
@@ -1210,7 +1210,7 @@ pub async fn lock_screen() {
     cfg_if::cfg_if! {
     if #[cfg(target_os = "linux")] {
         // xdg_screensaver lock not work on Linux from our service somehow
-        // loginctl lock-session also not work, they both work run rustdesk from cmd
+        // loginctl lock-session also not work, they both work run cloudydesk from cmd
         std::thread::spawn(|| {
             let mut key_event = KeyEvent::new();
 
@@ -1679,9 +1679,9 @@ fn skip_led_sync_control_key(_key: &ControlKey) -> bool {
 
 // LockModesHandler should not be created when single meta is pressing and releasing.
 // Because the drop function may insert "CapsLock Click" and "NumLock Click", which breaks single meta click.
-// https://github.com/rustdesk/rustdesk/issues/3928#issuecomment-1496936687
-// https://github.com/rustdesk/rustdesk/issues/3928#issuecomment-1500415822
-// https://github.com/rustdesk/rustdesk/issues/3928#issuecomment-1500773473
+// https://github.com/cloudydesk/cloudydesk/issues/3928#issuecomment-1496936687
+// https://github.com/cloudydesk/cloudydesk/issues/3928#issuecomment-1500415822
+// https://github.com/cloudydesk/cloudydesk/issues/3928#issuecomment-1500773473
 #[cfg(any(target_os = "windows", target_os = "linux"))]
 fn skip_led_sync_control_key(key: &ControlKey) -> bool {
     matches!(

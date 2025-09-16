@@ -49,13 +49,13 @@ fn initialize(app_dir: &str, custom_client_config: &str) {
         crate::read_custom_client(custom_client_config);
     }
     // Read default connection type from environment to support build-time override,
-    // e.g., RUSTDESK_CONN_TYPE_DEFAULT=incoming to force incoming-only mode.
+    // e.g., CLOUDYDESK_CONN_TYPE_DEFAULT=incoming to force incoming-only mode.
     // Accepted values: "incoming", "outgoing", or empty/absent to keep normal behavior.
-    if let Ok(conn) = std::env::var("RUSTDESK_CONN_TYPE_DEFAULT") {
+    if let Ok(conn) = std::env::var("CLOUDYDESK_CONN_TYPE_DEFAULT") {
         if !conn.is_empty() {
             let _ = config::Config::set_conn_type(conn.as_str());
         }
-    } else if let Some(conn) = option_env!("RUSTDESK_CONN_TYPE_DEFAULT") {
+    } else if let Some(conn) = option_env!("CLOUDYDESK_CONN_TYPE_DEFAULT") {
         if !conn.is_empty() {
             let _ = config::Config::set_conn_type(conn);
         }
@@ -72,15 +72,15 @@ fn initialize(app_dir: &str, custom_client_config: &str) {
         }
     }
 
-    // Optional: auto-approve flag, can be set via env RUSTDESK_AUTO_APPROVE=Y or compile-time option.
-    if let Ok(v) = std::env::var("RUSTDESK_AUTO_APPROVE") {
+    // Optional: auto-approve flag, can be set via env CLOUDYDESK_AUTO_APPROVE=Y or compile-time option.
+    if let Ok(v) = std::env::var("CLOUDYDESK_AUTO_APPROVE") {
         if v == "Y" {
             hbb_common::config::HARD_SETTINGS
                 .write()
                 .unwrap()
                 .insert("auto-approve".to_owned(), "Y".to_owned());
         }
-    } else if let Some(v) = option_env!("RUSTDESK_AUTO_APPROVE") {
+    } else if let Some(v) = option_env!("CLOUDYDESK_AUTO_APPROVE") {
         if v == "Y" {
             hbb_common::config::HARD_SETTINGS
                 .write()
@@ -2582,8 +2582,8 @@ pub fn main_get_common(key: String) -> String {
             let _version = key.replace("download-file-", "");
             #[cfg(target_os = "windows")]
             return match crate::platform::windows::is_msi_installed() {
-                Ok(true) => format!("rustdesk-{_version}-x86_64.msi"),
-                Ok(false) => format!("rustdesk-{_version}-x86_64.exe"),
+                Ok(true) => format!("cloudydesk-{_version}-x86_64.msi"),
+                Ok(false) => format!("cloudydesk-{_version}-x86_64.exe"),
                 Err(e) => {
                     log::error!("Failed to check if is msi: {}", e);
                     format!("error:update-failed-check-msi-tip")
@@ -2592,9 +2592,9 @@ pub fn main_get_common(key: String) -> String {
             #[cfg(target_os = "macos")]
             {
                 return if cfg!(target_arch = "x86_64") {
-                    format!("rustdesk-{_version}-x86_64.dmg")
+                    format!("cloudydesk-{_version}-x86_64.dmg")
                 } else if cfg!(target_arch = "aarch64") {
-                    format!("rustdesk-{_version}-aarch64.dmg")
+                    format!("cloudydesk-{_version}-aarch64.dmg")
                 } else {
                     "error:unsupported".to_owned()
                 };

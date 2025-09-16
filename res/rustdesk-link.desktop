@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=RustDesk
+Name=CloudyDesk
 NoDisplay=true
-MimeType=x-scheme-handler/rustdesk;
-TryExec=rustdesk
-Exec=rustdesk %u
-Icon=rustdesk
+MimeType=x-scheme-handler/cloudydesk;
+TryExec=cloudydesk
+Exec=cloudydesk %u
+Icon=cloudydesk
 Terminal=false
 Type=Application
 StartupNotify=false
-StartupWMClass=rustdesk
+StartupWMClass=cloudydesk

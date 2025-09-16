@@ -1,4 +1,4 @@
-name: Build the flutter version of the RustDesk
+name: Build the flutter version of the CloudyDesk
 
 on:
   workflow_call:
@@ -14,11 +14,11 @@ on:
 # variables from this workflow!
 #
 # It does NOT read build steps, however, so please fix 'flutter/build_fdroid.sh
-# whenever you add changes to Android CI build action ('build-rustdesk-android')
+# whenever you add changes to Android CI build action ('build-cloudydesk-android')
 # in this file!
 
 env:
-  SCITER_RUST_VERSION: "1.75" # https://github.com/rustdesk/rustdesk/discussions/7503, also 1.78 has ABI change which causes our sciter version not working, https://blog.rust-lang.org/2024/03/30/i128-layout-update.html
+  SCITER_RUST_VERSION: "1.75" # https://github.com/cloudydesk/cloudydesk/discussions/7503, also 1.78 has ABI change which causes our sciter version not working, https://blog.rust-lang.org/2024/03/30/i128-layout-update.html
   RUST_VERSION: "1.75" # sciter failed on m1 with 1.78 because of https://blog.rust-lang.org/2024/03/30/i128-layout-update.html
   MAC_RUST_VERSION: "1.81" # 1.81 is requred for macos, because of https://github.com/yury/cidre requires 1.81
   CARGO_NDK_VERSION: "3.1.2"
@@ -35,7 +35,7 @@ env:
   # If we change the `VCPKG COMMIT_ID`, please remember:
   # 1. Call `$VCPKG_ROOT/vcpkg x-update-baseline` to update the baseline in `vcpkg.json`.
   #  Or we may face build issue like 
-  #  https://github.com/rustdesk/rustdesk/actions/runs/14414119794/job/40427970174
+  #  https://github.com/cloudydesk/cloudydesk/actions/runs/14414119794/job/40427970174
   # 2. Update the `VCPKG_COMMIT_ID` in `ci.yml` and `playground.yml`.
   VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
   ARMV7_VCPKG_COMMIT_ID: "6f29f12e82a8293156836ad81cc9bf5af41fe836" # 2025.01.13, got "/opt/artifacts/vcpkg/vcpkg: No such file or directory" with latest version
@@ -51,8 +51,8 @@ jobs:
   generate-bridge:
     uses: ./.github/workflows/bridge.yml
 
-  build-RustDeskTempTopMostWindow:
-    uses: ./.github/workflows/third-party-RustDeskTempTopMostWindow.yml
+  build-CloudyDeskTempTopMostWindow:
+    uses: ./.github/workflows/third-party-CloudyDeskTempTopMostWindow.yml
     with:
       upload-artifact: ${{ inputs.upload-artifact }}
       target: windows-2022
@@ -64,7 +64,7 @@ jobs:
 
   build-for-windows-flutter:
     name: ${{ matrix.job.target }}
-    needs: [build-RustDeskTempTopMostWindow, generate-bridge]
+    needs: [build-CloudyDeskTempTopMostWindow, generate-bridge]
     runs-on: ${{ matrix.job.os }}
     strategy:
       fail-fast: false
@@ -110,11 +110,11 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
 
       # https://github.com/flutter/flutter/issues/155685
-      - name: Replace engine with rustdesk custom flutter engine
+      - name: Replace engine with cloudydesk custom flutter engine
         run: |
           flutter doctor -v
           flutter precache --windows
-          Invoke-WebRequest -Uri https://github.com/rustdesk/engine/releases/download/main/windows-x64-release.zip -OutFile windows-x64-release.zip
+          Invoke-WebRequest -Uri https://github.com/cloudydesk/engine/releases/download/main/windows-x64-release.zip -OutFile windows-x64-release.zip
           Expand-Archive -Path windows-x64-release.zip -DestinationPath windows-x64-release
           mv -Force windows-x64-release/*  C:/hostedtoolcache/windows/flutter/stable-${{ env.FLUTTER_VERSION }}-x64/bin/cache/artifacts/engine/windows-x64-release/
 
@@ -163,39 +163,39 @@ jobs:
           head -n 100 "${VCPKG_ROOT}/buildtrees/ffmpeg/build-${{ matrix.job.vcpkg-triplet }}-rel-out.log" || true
         shell: bash
 
-      - name: Build rustdesk
+      - name: Build cloudydesk
         run: |
-          # Windows: build RustDesk
+          # Windows: build CloudyDesk
           python3 .\build.py --portable --hwcodec --flutter --vram --skip-portable-pack
-          mv ./flutter/build/windows/x64/runner/Release ./rustdesk
+          mv ./flutter/build/windows/x64/runner/Release ./cloudydesk
 
-          # Download usbmmidd_v2.zip and extract it to ./rustdesk
-          Invoke-WebRequest -Uri https://github.com/rustdesk-org/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip -OutFile usbmmidd_v2.zip
+          # Download usbmmidd_v2.zip and extract it to ./cloudydesk
+          Invoke-WebRequest -Uri https://github.com/cloudydesk/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip -OutFile usbmmidd_v2.zip
           Expand-Archive usbmmidd_v2.zip -DestinationPath .
           Remove-Item -Path usbmmidd_v2\Win32 -Recurse
           Remove-Item -Path "usbmmidd_v2\deviceinstaller64.exe", "usbmmidd_v2\deviceinstaller.exe", "usbmmidd_v2\usbmmidd.bat"
-          mv -Force .\usbmmidd_v2 ./rustdesk
+          mv -Force .\usbmmidd_v2 ./cloudydesk
 
-          # Download printer driver files and extract them to ./rustdesk
+          # Download printer driver files and extract them to ./cloudydesk
           try {
-            Invoke-WebRequest -Uri https://github.com/rustdesk/hbb_common/releases/download/driver/rustdesk_printer_driver_v4-1.4.zip -OutFile rustdesk_printer_driver_v4-1.4.zip
-            Invoke-WebRequest -Uri https://github.com/rustdesk/hbb_common/releases/download/driver/printer_driver_adapter.zip -OutFile printer_driver_adapter.zip
-            Invoke-WebRequest -Uri https://github.com/rustdesk/hbb_common/releases/download/driver/sha256sums -OutFile sha256sums
+            Invoke-WebRequest -Uri https://github.com/cloudydesk/hbb_common/releases/download/driver/cloudydesk_printer_driver_v4-1.4.zip -OutFile cloudydesk_printer_driver_v4-1.4.zip
+            Invoke-WebRequest -Uri https://github.com/cloudydesk/hbb_common/releases/download/driver/printer_driver_adapter.zip -OutFile printer_driver_adapter.zip
+            Invoke-WebRequest -Uri https://github.com/cloudydesk/hbb_common/releases/download/driver/sha256sums -OutFile sha256sums
 
             # Check and move the files
-            $checksum_driver = (Select-String -Path .\sha256sums -Pattern '^([a-fA-F0-9]{64}) \*rustdesk_printer_driver_v4-1.4\.zip$').Matches.Groups[1].Value
-            $downloadsum_driver = Get-FileHash -Path rustdesk_printer_driver_v4-1.4.zip -Algorithm SHA256
+            $checksum_driver = (Select-String -Path .\sha256sums -Pattern '^([a-fA-F0-9]{64}) \*cloudydesk_printer_driver_v4-1.4\.zip$').Matches.Groups[1].Value
+            $downloadsum_driver = Get-FileHash -Path cloudydesk_printer_driver_v4-1.4.zip -Algorithm SHA256
             $checksum_adapter = (Select-String -Path .\sha256sums -Pattern '^([a-fA-F0-9]{64}) \*printer_driver_adapter\.zip$').Matches.Groups[1].Value
             $downloadsum_adapter = Get-FileHash -Path printer_driver_adapter.zip -Algorithm SHA256
             if ($checksum_driver -eq $downloadsum_driver.Hash -and $checksum_adapter -eq $downloadsum_adapter.Hash) {
-                Write-Output "rustdesk_printer_driver_v4-1.4, checksums match, extract the file."
-                Expand-Archive rustdesk_printer_driver_v4-1.4.zip -DestinationPath .
-                mkdir ./rustdesk/drivers
-                mv -Force .\rustdesk_printer_driver_v4-1.4 ./rustdesk/drivers/RustDeskPrinterDriver
+                Write-Output "cloudydesk_printer_driver_v4-1.4, checksums match, extract the file."
+                Expand-Archive cloudydesk_printer_driver_v4-1.4.zip -DestinationPath .
+                mkdir ./cloudydesk/drivers
+                mv -Force .\cloudydesk_printer_driver_v4-1.4 ./cloudydesk/drivers/CloudyDeskPrinterDriver
                 Expand-Archive printer_driver_adapter.zip -DestinationPath .
-                mv -Force .\printer_driver_adapter.dll ./rustdesk
+                mv -Force .\printer_driver_adapter.dll ./cloudydesk
             } elseif ($checksum_driver -ne $downloadsum_driver.Hash) {
-                Write-Output "rustdesk_printer_driver_v4-1.4, checksums do not match, ignore the file."
+                Write-Output "cloudydesk_printer_driver_v4-1.4, checksums do not match, ignore the file."
             } else {
                 Write-Output "printer_driver_adapter.dll, checksums do not match, ignore the file."
             }
@@ -219,26 +219,26 @@ jobs:
             ls -l ./libs/portable/Runner.res;
           fi
 
-      - name: Download RustDeskTempTopMostWindow artifacts
+      - name: Download CloudyDeskTempTopMostWindow artifacts
         uses: actions/download-artifact@master
         if: ${{ inputs.upload-artifact }}
         with:
           name: topmostwindow-artifacts
-          path: "./rustdesk"
+          path: "./cloudydesk"
 
       - name: Upload unsigned
         if: env.UPLOAD_ARTIFACT == 'true'
         uses: actions/upload-artifact@master
         with:
-          name: rustdesk-unsigned-windows-${{ matrix.job.arch }}
-          path: rustdesk
+          name: cloudydesk-unsigned-windows-${{ matrix.job.arch }}
+          path: cloudydesk
 
-      - name: Sign rustdesk files
+      - name: Sign cloudydesk files
         if: env.UPLOAD_ARTIFACT == 'true' && env.SIGN_BASE_URL != ''
         shell: bash
         run: |
           pip3 install requests argparse
-          BASE_URL=${{ secrets.SIGN_BASE_URL }} SECRET_KEY=${{ secrets.SIGN_SECRET_KEY }} python3 res/job.py sign_files ./rustdesk/
+          BASE_URL=${{ secrets.SIGN_BASE_URL }} SECRET_KEY=${{ secrets.SIGN_SECRET_KEY }} python3 res/job.py sign_files ./cloudydesk/
 
       - name: Build self-extracted executable
         shell: bash
@@ -247,10 +247,10 @@ jobs:
           sed -i '/dpiAware/d' res/manifest.xml
           pushd ./libs/portable
           pip3 install -r requirements.txt
-          python3 ./generate.py -f ../../rustdesk/ -o . -e ../../rustdesk/rustdesk.exe
+          python3 ./generate.py -f ../../cloudydesk/ -o . -e ../../cloudydesk/cloudydesk.exe
           popd
           mkdir -p ./SignOutput
-          mv ./target/release/rustdesk-portable-packer.exe ./SignOutput/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.exe
+          mv ./target/release/cloudydesk-portable-packer.exe ./SignOutput/cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.exe
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
@@ -259,13 +259,13 @@ jobs:
         if: env.UPLOAD_ARTIFACT == 'true'
         run: |
           pushd ./res/msi
-          python preprocess.py --arp -d ../../rustdesk
+          python preprocess.py --arp -d ../../cloudydesk
           nuget restore msi.sln
           msbuild msi.sln -p:Configuration=Release -p:Platform=x64 /p:TargetVersion=Windows10
-          mv ./Package/bin/x64/Release/en-us/Package.msi ../../SignOutput/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.msi
-          sha256sum ../../SignOutput/rustdesk-*.msi
+          mv ./Package/bin/x64/Release/en-us/Package.msi ../../SignOutput/cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.msi
+          sha256sum ../../SignOutput/cloudydesk-*.msi
 
-      - name: Sign rustdesk self-extracted file
+      - name: Sign cloudydesk self-extracted file
         if: env.UPLOAD_ARTIFACT == 'true' && env.SIGN_BASE_URL != ''
         shell: bash
         run: |
@@ -278,8 +278,8 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            ./SignOutput/rustdesk-*.msi
-            ./SignOutput/rustdesk-*.exe
+            ./SignOutput/cloudydesk-*.msi
+            ./SignOutput/cloudydesk-*.exe
 
   # The fallback for the flutter version, we use Sciter for 32bit Windows.
   build-for-windows-sciter:
@@ -314,7 +314,7 @@ jobs:
           submodules: recursive
 
       - name: Install LLVM and Clang
-        uses: rustdesk-org/install-llvm-action-32bit@master
+        uses: cloudydesk/install-llvm-action-32bit@master
         with:
           version: ${{ env.LLVM_VERSION }}
 
@@ -356,7 +356,7 @@ jobs:
           head -n 100 "${VCPKG_ROOT}/buildtrees/ffmpeg/build-${{ matrix.job.vcpkg-triplet }}-rel-out.log" || true
         shell: bash
 
-      - name: Build rustdesk
+      - name: Build cloudydesk
         id: build
         shell: bash
         run: |
@@ -365,10 +365,10 @@ jobs:
           sed -i 's/branch = "dyn"/branch = "dyn_x86"/g' ./Cargo.toml
           cargo build --features inline,vram,hwcodec --release --bins
           mkdir -p ./Release
-          mv ./target/release/rustdesk.exe ./Release/rustdesk.exe
+          mv ./target/release/cloudydesk.exe ./Release/cloudydesk.exe
           curl -LJ -o ./Release/sciter.dll https://github.com/c-smile/sciter-sdk/raw/master/bin.win/x32/sciter.dll
           echo "output_folder=./Release" >> $GITHUB_OUTPUT
-          curl -LJ -o ./usbmmidd_v2.zip https://github.com/rustdesk-org/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip
+          curl -LJ -o ./usbmmidd_v2.zip https://github.com/cloudydesk/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip
           unzip usbmmidd_v2.zip
           # Do not remove x64 files, because the user may run the 32bit version on a 64bit system.
           # Do not remove ./usbmmidd_v2/deviceinstaller64.exe, as x86 exe cannot install and uninstall drivers when running on x64,
@@ -392,7 +392,7 @@ jobs:
             ls -l ./libs/portable/Runner.res;
           fi
 
-      - name: Sign rustdesk files
+      - name: Sign cloudydesk files
         if: env.UPLOAD_ARTIFACT == 'true' && env.SIGN_BASE_URL != ''
         shell: bash
         run: |
@@ -405,12 +405,12 @@ jobs:
           sed -i '/dpiAware/d' res/manifest.xml
           pushd ./libs/portable
           pip3 install -r requirements.txt
-          python3 ./generate.py -f ../../Release/ -o . -e ../../Release/rustdesk.exe
+          python3 ./generate.py -f ../../Release/ -o . -e ../../Release/cloudydesk.exe
           popd
           mkdir -p ./SignOutput
-          mv ./target/release/rustdesk-portable-packer.exe ./SignOutput/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.exe
+          mv ./target/release/cloudydesk-portable-packer.exe ./SignOutput/cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.exe
 
-      - name: Sign rustdesk self-extracted file
+      - name: Sign cloudydesk self-extracted file
         if: env.UPLOAD_ARTIFACT == 'true' && env.SIGN_BASE_URL != ''
         shell: bash
         run: |
@@ -423,11 +423,11 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            ./SignOutput/rustdesk-*.exe
+            ./SignOutput/cloudydesk-*.exe
 
-  build-rustdesk-ios:
+  build-cloudydesk-ios:
     if: ${{ inputs.upload-artifact }}
-    name: build rustdesk ios ipa
+    name: build cloudydesk ios ipa
     runs-on: ${{ matrix.job.os }}
     needs: [generate-bridge]
     strategy:
@@ -500,7 +500,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          prefix-key: rustdesk-lib-cache-ios
+          prefix-key: cloudydesk-lib-cache-ios
           key: ${{ matrix.job.target }}
 
       - name: Restore bridge files
@@ -509,18 +509,18 @@ jobs:
           name: bridge-artifact
           path: ./
 
-      - name: Build rustdesk lib
+      - name: Build cloudydesk lib
         run: |
           rustup target add ${{ matrix.job.target }}
           cargo build --features flutter,hwcodec --release --target aarch64-apple-ios --lib
           
-      - name: Upload liblibrustdesk.a Artifacts
+      - name: Upload liblibcloudydesk.a Artifacts
         uses: actions/upload-artifact@master
         with:
-          name: liblibrustdesk.a
-          path: target/aarch64-apple-ios/release/liblibrustdesk.a
+          name: liblibcloudydesk.a
+          path: target/aarch64-apple-ios/release/liblibcloudydesk.a
 
-      - name: Build rustdesk
+      - name: Build cloudydesk
         shell: bash
         run: |
           pushd flutter
@@ -532,7 +532,7 @@ jobs:
       #   # if: env.ANDROID_SIGNING_KEY != null && env.UPLOAD_ARTIFACT == 'true'
       #   uses: actions/upload-artifact@master
       #   with:
-      #     name: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
+      #     name: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
       #     path: flutter/build/ios/ipa/*.ipa
 
       # - name: Publish ipa package
@@ -563,7 +563,7 @@ jobs:
           - {
               target: aarch64-apple-darwin,
               os: macos-14,
-              # extra-build-args: "--disable-flutter-texture-render", # disable this for mac, because we see a lot of users reporting flickering both on arm and x64, and we can not confirm if texture rendering has better performance if htere is no vram, https://github.com/rustdesk/rustdesk/issues/6296
+              # extra-build-args: "--disable-flutter-texture-render", # disable this for mac, because we see a lot of users reporting flickering both on arm and x64, and we can not confirm if texture rendering has better performance if htere is no vram, https://github.com/cloudydesk/cloudydesk/issues/6296
               extra-build-args: "--screencapturekit",
               arch: aarch64,
               vcpkg-triplet: arm64-osx,
@@ -587,12 +587,12 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.MACOS_P12_BASE64 }}
           p12-password: ${{ secrets.MACOS_P12_PASSWORD }}
-          keychain: rustdesk
+          keychain: cloudydesk
 
       - name: Check sign and import sign key
         if: env.MACOS_P12_BASE64 != null
         run: |
-          security default-keychain -s rustdesk.keychain
+          security default-keychain -s cloudydesk.keychain
           security find-identity -v
 
       - name: Import notarize key
@@ -600,7 +600,7 @@ jobs:
         uses: timheuer/base64-to-file@v1.2
         with:
           # https://gregoryszorc.com/docs/apple-codesign/stable/apple_codesign_rcodesign.html#notarizing-and-stapling
-          fileName: rustdesk.json
+          fileName: cloudydesk.json
           fileDir: ${{ github.workspace }}
           encodedString: ${{ secrets.MACOS_NOTARIZE_JSON }}
 
@@ -692,7 +692,7 @@ jobs:
           cargo -V
           rustc -V
 
-      - name: Build rustdesk
+      - name: Build cloudydesk
         run: |
           if [ "${{ matrix.job.target }}" = "aarch64-apple-darwin" ]; then
             MIN_MACOS_VERSION="12.3"
@@ -709,14 +709,14 @@ jobs:
           CREATE_DMG="$(command -v create-dmg)"
           CREATE_DMG="$(readlink -f "$CREATE_DMG")"
           sed -i -e 's/MAXIMUM_UNMOUNTING_ATTEMPTS=3/MAXIMUM_UNMOUNTING_ATTEMPTS=7/' "$CREATE_DMG"
-          create-dmg --icon "RustDesk.app" 200 190 --hide-extension "RustDesk.app" --window-size 800 400 --app-drop-link 600 185 rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.dmg ./flutter/build/macos/Build/Products/Release/RustDesk.app
+          create-dmg --icon "CloudyDesk.app" 200 190 --hide-extension "CloudyDesk.app" --window-size 800 400 --app-drop-link 600 185 cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.dmg ./flutter/build/macos/Build/Products/Release/CloudyDesk.app
 
       - name: Upload unsigned macOS app
         if: env.UPLOAD_ARTIFACT == 'true'
         uses: actions/upload-artifact@master
         with:
-          name: rustdesk-unsigned-macos-${{ matrix.job.arch }}
-          path: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.dmg # can not upload the directory directly or tar.gz, which destroy the link structure, causing the codesign failed
+          name: cloudydesk-unsigned-macos-${{ matrix.job.arch }}
+          path: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.dmg # can not upload the directory directly or tar.gz, which destroy the link structure, causing the codesign failed
 
       - name: Codesign app and create signed dmg
         if: env.MACOS_P12_BASE64 != null && env.UPLOAD_ARTIFACT == 'true'
@@ -726,20 +726,20 @@ jobs:
           CREATE_DMG="$(readlink -f "$CREATE_DMG")"
           sed -i -e 's/MAXIMUM_UNMOUNTING_ATTEMPTS=3/MAXIMUM_UNMOUNTING_ATTEMPTS=7/' "$CREATE_DMG"
           # Unlock keychain
-          security default-keychain -s rustdesk.keychain
-          security unlock-keychain -p ${{ secrets.MACOS_P12_PASSWORD }} rustdesk.keychain
-          # start sign the rustdesk.app and dmg
+          security default-keychain -s cloudydesk.keychain
+          security unlock-keychain -p ${{ secrets.MACOS_P12_PASSWORD }} cloudydesk.keychain
+          # start sign the cloudydesk.app and dmg
           rm -rf *.dmg || true
-          codesign --force --options runtime -s ${{ secrets.MACOS_CODESIGN_IDENTITY }} --deep --strict ./flutter/build/macos/Build/Products/Release/RustDesk.app -vvv
-          create-dmg --icon "RustDesk.app" 200 190 --hide-extension "RustDesk.app" --window-size 800 400 --app-drop-link 600 185 rustdesk-${{ env.VERSION }}.dmg ./flutter/build/macos/Build/Products/Release/RustDesk.app
-          codesign --force --options runtime -s ${{ secrets.MACOS_CODESIGN_IDENTITY }} --deep --strict rustdesk-${{ env.VERSION }}.dmg -vvv
-          # notarize the rustdesk-${{ env.VERSION }}.dmg
-          rcodesign notary-submit --api-key-path ${{ github.workspace }}/rustdesk.json  --staple rustdesk-${{ env.VERSION }}.dmg
+          codesign --force --options runtime -s ${{ secrets.MACOS_CODESIGN_IDENTITY }} --deep --strict ./flutter/build/macos/Build/Products/Release/CloudyDesk.app -vvv
+          create-dmg --icon "CloudyDesk.app" 200 190 --hide-extension "CloudyDesk.app" --window-size 800 400 --app-drop-link 600 185 cloudydesk-${{ env.VERSION }}.dmg ./flutter/build/macos/Build/Products/Release/CloudyDesk.app
+          codesign --force --options runtime -s ${{ secrets.MACOS_CODESIGN_IDENTITY }} --deep --strict cloudydesk-${{ env.VERSION }}.dmg -vvv
+          # notarize the cloudydesk-${{ env.VERSION }}.dmg
+          rcodesign notary-submit --api-key-path ${{ github.workspace }}/cloudydesk.json  --staple cloudydesk-${{ env.VERSION }}.dmg
 
-      - name: Rename rustdesk
+      - name: Rename cloudydesk
         if: env.UPLOAD_ARTIFACT == 'true'
         run: |
-          for name in rustdesk*??.dmg; do
+          for name in cloudydesk*??.dmg; do
               mv "$name" "${name%%.dmg}-${{ matrix.job.arch }}.dmg"
           done
 
@@ -750,7 +750,7 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            rustdesk*-${{ matrix.job.arch }}.dmg
+            cloudydesk*-${{ matrix.job.arch }}.dmg
 
   publish_unsigned:
     needs:
@@ -762,35 +762,35 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@master
         with:
-          name: rustdesk-unsigned-macos-x86_64
+          name: cloudydesk-unsigned-macos-x86_64
           path: ./
 
       - name: Download Artifacts
         uses: actions/download-artifact@master
         with:
-          name: rustdesk-unsigned-macos-aarch64
+          name: cloudydesk-unsigned-macos-aarch64
           path: ./
 
       - name: Download Artifacts
         uses: actions/download-artifact@master
         with:
-          name: rustdesk-unsigned-windows-x86_64
+          name: cloudydesk-unsigned-windows-x86_64
           path: ./windows-x86_64/
 
       - name: Combine unsigned app
         run: |
-          tar czf rustdesk-${{ env.VERSION }}-unsigned.tar.gz *.dmg windows-x86_64
+          tar czf cloudydesk-${{ env.VERSION }}-unsigned.tar.gz *.dmg windows-x86_64
 
       - name: Publish unsigned app
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
-          files: rustdesk-${{ env.VERSION }}-unsigned.tar.gz
+          files: cloudydesk-${{ env.VERSION }}-unsigned.tar.gz
 
-  build-rustdesk-android:
+  build-cloudydesk-android:
     needs: [generate-bridge]
-    name: build rustdesk android apk ${{ matrix.job.target }}
+    name: build cloudydesk android apk ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.os }}
     strategy:
       fail-fast: false
@@ -942,10 +942,10 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          prefix-key: rustdesk-lib-cache-android # TODO: drop '-android' part after caches are invalidated
+          prefix-key: cloudydesk-lib-cache-android # TODO: drop '-android' part after caches are invalidated
           key: ${{ matrix.job.target }}
 
-      - name: Build rustdesk lib
+      - name: Build cloudydesk lib
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
@@ -956,32 +956,32 @@ jobs:
             aarch64-linux-android)
               ./flutter/ndk_arm64.sh
               mkdir -p ./flutter/android/app/src/main/jniLibs/arm64-v8a
-              cp ./target/${{ matrix.job.target }}/release/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/librustdesk.so
+              cp ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/libcloudydesk.so
             ;;
             armv7-linux-androideabi)
               ./flutter/ndk_arm.sh
               mkdir -p ./flutter/android/app/src/main/jniLibs/armeabi-v7a
-              cp ./target/${{ matrix.job.target }}/release/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/librustdesk.so
+              cp ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/libcloudydesk.so
             ;;
             x86_64-linux-android)
               ./flutter/ndk_x64.sh
               mkdir -p ./flutter/android/app/src/main/jniLibs/x86_64
-              cp ./target/${{ matrix.job.target }}/release/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/x86_64/librustdesk.so
+              cp ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/x86_64/libcloudydesk.so
             ;;
             i686-linux-android)
               ./flutter/ndk_x86.sh
               mkdir -p ./flutter/android/app/src/main/jniLibs/x86
-              cp ./target/${{ matrix.job.target }}/release/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/x86/librustdesk.so
+              cp ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/x86/libcloudydesk.so
             ;;
           esac
 
-      - name: Upload Rustdesk library to Artifacts
+      - name: Upload Cloudydesk library to Artifacts
         uses: actions/upload-artifact@master
         with:
-          name: librustdesk.so.${{ matrix.job.target }}
-          path: ./target/${{ matrix.job.target }}/release/liblibrustdesk.so
+          name: libcloudydesk.so.${{ matrix.job.target }}
+          path: ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so
 
-      - name: Build rustdesk
+      - name: Build cloudydesk
         shell: bash
         env:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
@@ -993,43 +993,43 @@ jobs:
             aarch64-linux-android)
               mkdir -p ./flutter/android/app/src/main/jniLibs/arm64-v8a
               cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/
-              cp ./target/${{ matrix.job.target }}/release/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/librustdesk.so
+              cp ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/libcloudydesk.so
               # build flutter
               pushd flutter
               flutter build apk "--${{ matrix.job.reltype }}" --target-platform android-arm64 --split-per-abi
-              mv build/app/outputs/flutter-apk/app-arm64-v8a-${{ matrix.job.reltype }}.apk ../rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk
+              mv build/app/outputs/flutter-apk/app-arm64-v8a-${{ matrix.job.reltype }}.apk ../cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk
             ;;
             armv7-linux-androideabi)
               mkdir -p ./flutter/android/app/src/main/jniLibs/armeabi-v7a
               cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/libc++_shared.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/
-              cp ./target/${{ matrix.job.target }}/release/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/librustdesk.so
+              cp ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/libcloudydesk.so
               # build flutter
               pushd flutter
               flutter build apk "--${{ matrix.job.reltype }}" --target-platform android-arm --split-per-abi
-              mv build/app/outputs/flutter-apk/app-armeabi-v7a-${{ matrix.job.reltype }}.apk ../rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk
+              mv build/app/outputs/flutter-apk/app-armeabi-v7a-${{ matrix.job.reltype }}.apk ../cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk
             ;;
             x86_64-linux-android)
               mkdir -p ./flutter/android/app/src/main/jniLibs/x86_64
               cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/x86_64/
-              cp ./target/${{ matrix.job.target }}/release/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/x86_64/librustdesk.so
+              cp ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/x86_64/libcloudydesk.so
               # build flutter
               pushd flutter
               flutter build apk "--${{ matrix.job.reltype }}" --target-platform android-x64 --split-per-abi
-              mv build/app/outputs/flutter-apk/app-x86_64-${{ matrix.job.reltype }}.apk ../rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk
+              mv build/app/outputs/flutter-apk/app-x86_64-${{ matrix.job.reltype }}.apk ../cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk
             ;;
             i686-linux-android)
               mkdir -p ./flutter/android/app/src/main/jniLibs/x86
               cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/x86/
-              cp ./target/${{ matrix.job.target }}/release/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/x86/librustdesk.so
+              cp ./target/${{ matrix.job.target }}/release/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/x86/libcloudydesk.so
               # build flutter
               pushd flutter
               flutter build apk "--${{ matrix.job.reltype }}" --target-platform android-x86 --split-per-abi
-              mv build/app/outputs/flutter-apk/app-x86-${{ matrix.job.reltype }}.apk ../rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk
+              mv build/app/outputs/flutter-apk/app-x86-${{ matrix.job.reltype }}.apk ../cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk
             ;;
           esac
           popd
           mkdir -p signed-apk; pushd signed-apk
-          mv ../rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk .
+          mv ../cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.apk .
 
       # https://github.com/r0adkll/sign-android-release/issues/84#issuecomment-1889636075
       - name: Setup sign tool version variable
@@ -1042,7 +1042,7 @@ jobs:
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
         if: env.ANDROID_SIGNING_KEY != null
-        id: sign-rustdesk
+        id: sign-cloudydesk
         with:
           releaseDirectory: ./signed-apk
           signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
@@ -1057,8 +1057,8 @@ jobs:
         if: env.ANDROID_SIGNING_KEY != null && env.UPLOAD_ARTIFACT == 'true'
         uses: actions/upload-artifact@master
         with:
-          name: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
-          path: ${{steps.sign-rustdesk.outputs.signedReleaseFile}}
+          name: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
+          path: ${{steps.sign-cloudydesk.outputs.signedReleaseFile}}
 
       - name: Publish signed apk package
         if: env.ANDROID_SIGNING_KEY != null && env.UPLOAD_ARTIFACT == 'true'
@@ -1067,7 +1067,7 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            ${{steps.sign-rustdesk.outputs.signedReleaseFile}}
+            ${{steps.sign-cloudydesk.outputs.signedReleaseFile}}
 
       - name: Publish unsigned apk package
         if: env.ANDROID_SIGNING_KEY == null && env.UPLOAD_ARTIFACT == 'true'
@@ -1076,11 +1076,11 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            signed-apk/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
+            signed-apk/cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
 
-  build-rustdesk-android-universal:
-    needs: [build-rustdesk-android]
-    name: build rustdesk android universal apk
+  build-cloudydesk-android-universal:
+    needs: [build-cloudydesk-android]
+    name: build cloudydesk android universal apk
     if: ${{ inputs.upload-artifact }}
     runs-on: ubuntu-24.04
     env:
@@ -1163,32 +1163,32 @@ jobs:
           name: bridge-artifact
           path: ./
 
-      - name: Download Rustdesk library from Artifacts
+      - name: Download Cloudydesk library from Artifacts
         uses: actions/download-artifact@master
         with:
-          name: librustdesk.so.aarch64-linux-android
+          name: libcloudydesk.so.aarch64-linux-android
           path: ./flutter/android/app/src/main/jniLibs/arm64-v8a
 
-      - name: Download Rustdesk library from Artifacts
+      - name: Download Cloudydesk library from Artifacts
         uses: actions/download-artifact@master
         with:
-          name: librustdesk.so.armv7-linux-androideabi
+          name: libcloudydesk.so.armv7-linux-androideabi
           path: ./flutter/android/app/src/main/jniLibs/armeabi-v7a
 
-      - name: Download Rustdesk library from Artifacts
+      - name: Download Cloudydesk library from Artifacts
         uses: actions/download-artifact@master
         with:
-          name: librustdesk.so.x86_64-linux-android
+          name: libcloudydesk.so.x86_64-linux-android
           path: ./flutter/android/app/src/main/jniLibs/x86_64
 
-      - name: Download Rustdesk library from Artifacts
+      - name: Download Cloudydesk library from Artifacts
         if: ${{ env.reltype == 'debug' }}
         uses: actions/download-artifact@master
         with:
-          name: librustdesk.so.i686-linux-android
+          name: libcloudydesk.so.i686-linux-android
           path: ./flutter/android/app/src/main/jniLibs/x86
 
-      - name: Build rustdesk
+      - name: Build cloudydesk
         shell: bash
         env:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
@@ -1196,14 +1196,14 @@ jobs:
           export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH
           # temporary use debug sign config
           sed -i "s/signingConfigs.release/signingConfigs.debug/g" ./flutter/android/app/build.gradle
-          mv ./flutter/android/app/src/main/jniLibs/arm64-v8a/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/librustdesk.so
+          mv ./flutter/android/app/src/main/jniLibs/arm64-v8a/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/libcloudydesk.so
           cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/
-          mv ./flutter/android/app/src/main/jniLibs/armeabi-v7a/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/librustdesk.so
+          mv ./flutter/android/app/src/main/jniLibs/armeabi-v7a/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/libcloudydesk.so
           cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/libc++_shared.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/
-          mv ./flutter/android/app/src/main/jniLibs/x86_64/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/x86_64/librustdesk.so
+          mv ./flutter/android/app/src/main/jniLibs/x86_64/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/x86_64/libcloudydesk.so
           cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/x86_64/
           if [ "${{ env.reltype }}" = "debug" ]; then
-            mv ./flutter/android/app/src/main/jniLibs/x86/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/x86/librustdesk.so
+            mv ./flutter/android/app/src/main/jniLibs/x86/liblibcloudydesk.so ./flutter/android/app/src/main/jniLibs/x86/libcloudydesk.so
             cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/x86/
           fi
           # build flutter
@@ -1211,7 +1211,7 @@ jobs:
           flutter build apk "--${{ env.reltype }}" --target-platform android-arm64,android-arm,android-x64${{ env.x86_target }}
           popd
           mkdir -p signed-apk
-          mv ./flutter/build/app/outputs/flutter-apk/app-${{ env.reltype }}.apk signed-apk/rustdesk-${{ env.VERSION }}-universal${{ env.suffix }}.apk
+          mv ./flutter/build/app/outputs/flutter-apk/app-${{ env.reltype }}.apk signed-apk/cloudydesk-${{ env.VERSION }}-universal${{ env.suffix }}.apk
 
       # https://github.com/r0adkll/sign-android-release/issues/84#issuecomment-1889636075
       - name: Setup sign tool version variable
@@ -1224,7 +1224,7 @@ jobs:
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
         if: env.ANDROID_SIGNING_KEY != null
-        id: sign-rustdesk
+        id: sign-cloudydesk
         with:
           releaseDirectory: ./signed-apk
           signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
@@ -1239,8 +1239,8 @@ jobs:
         if: env.ANDROID_SIGNING_KEY != null && env.UPLOAD_ARTIFACT == 'true'
         uses: actions/upload-artifact@master
         with:
-          name: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
-          path: ${{steps.sign-rustdesk.outputs.signedReleaseFile}}
+          name: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
+          path: ${{steps.sign-cloudydesk.outputs.signedReleaseFile}}
 
       - name: Publish signed apk package
         if: env.ANDROID_SIGNING_KEY != null && env.UPLOAD_ARTIFACT == 'true'
@@ -1249,7 +1249,7 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            ${{steps.sign-rustdesk.outputs.signedReleaseFile}}
+            ${{steps.sign-cloudydesk.outputs.signedReleaseFile}}
 
       - name: Publish unsigned apk package
         if: env.ANDROID_SIGNING_KEY == null && env.UPLOAD_ARTIFACT == 'true'
@@ -1258,11 +1258,11 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            signed-apk/rustdesk-${{ env.VERSION }}-universal${{ env.suffix }}.apk
+            signed-apk/cloudydesk-${{ env.VERSION }}-universal${{ env.suffix }}.apk
 
-  build-rustdesk-linux:
+  build-cloudydesk-linux:
     needs: [generate-bridge]
-    name: build rustdesk linux ${{ matrix.job.target }}
+    name: build cloudydesk linux ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.on }}
     strategy:
       fail-fast: false
@@ -1380,8 +1380,8 @@ jobs:
           name: bridge-artifact
           path: ./
 
-      - uses: rustdesk-org/run-on-arch-action@amd64-support
-        name: Build rustdesk
+      - uses: cloudydesk/run-on-arch-action@amd64-support
+        name: Build cloudydesk
         id: vcpkg
         if: matrix.job.arch == 'x86_64' || env.UPLOAD_ARTIFACT == 'true'
         with:
@@ -1519,7 +1519,7 @@ jobs:
             export CARGO_INCREMENTAL=0
             export DEB_ARCH=${{ matrix.job.deb_arch }}
             python3 ./build.py --flutter --skip-cargo
-            for name in rustdesk*??.deb; do
+            for name in cloudydesk*??.deb; do
               mv "$name" "${name%%.deb}-${{ matrix.job.arch }}.deb"
             done
 
@@ -1533,7 +1533,7 @@ jobs:
             esac
             HBB=`pwd` rpmbuild ./res/rpm-flutter.spec -bb
             pushd ~/rpmbuild/RPMS/${{ matrix.job.arch }}
-            for name in rustdesk*??.rpm; do
+            for name in cloudydesk*??.rpm; do
                 mv "$name" /workspace/"${name%%.rpm}.rpm"
             done
 
@@ -1547,7 +1547,7 @@ jobs:
             esac
             HBB=`pwd` rpmbuild ./res/rpm-flutter-suse.spec -bb
             pushd ~/rpmbuild/RPMS/${{ matrix.job.arch }}
-            for name in rustdesk*??.rpm; do
+            for name in cloudydesk*??.rpm; do
                 mv "$name" /workspace/"${name%%.rpm}-suse.rpm"
             done
 
@@ -1558,15 +1558,15 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            rustdesk-*.deb
-            rustdesk-*.rpm
+            cloudydesk-*.deb
+            cloudydesk-*.rpm
 
       - name: Upload deb
         uses: actions/upload-artifact@master
         if: env.UPLOAD_ARTIFACT == 'true'
         with:
-          name: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.deb
-          path: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.deb
+          name: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.deb
+          path: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.deb
 
       # only x86_64 for arch since we can not find newest arm64 docker image to build
       # old arch image does not make sense for arch since it is "arch" which always update to date
@@ -1581,7 +1581,7 @@ jobs:
 
       - name: Build archlinux package
         if: matrix.job.arch == 'x86_64' && env.UPLOAD_ARTIFACT == 'true'
-        uses: rustdesk-org/arch-makepkg-action@master
+        uses: cloudydesk/arch-makepkg-action@master
         with:
           packages:
           scripts: |
@@ -1594,12 +1594,12 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            res/rustdesk-${{ env.VERSION }}*.zst
+            res/cloudydesk-${{ env.VERSION }}*.zst
 
-  build-rustdesk-linux-sciter:
+  build-cloudydesk-linux-sciter:
     if: ${{ inputs.upload-artifact }}
     runs-on: ${{ matrix.job.on }}
-    name: build-rustdesk-linux-sciter ${{ matrix.job.target }}
+    name: build-cloudydesk-linux-sciter ${{ matrix.job.target }}
     strategy:
       fail-fast: false
       matrix:
@@ -1619,7 +1619,7 @@ jobs:
               arch: armv7,
               target: armv7-unknown-linux-gnueabihf,
               on: ubuntu-22.04-arm,
-              distro: ubuntu18.04-rustdesk,
+              distro: ubuntu18.04-cloudydesk,
               deb_arch: armhf,
               sciter_arch: arm32,
               vcpkg-triplet: arm-linux,
@@ -1663,8 +1663,8 @@ jobs:
           RUST_TOOLCHAIN_VERSION=$(cargo --version | awk '{print $2}')
           echo "RUST_TOOLCHAIN_VERSION=$RUST_TOOLCHAIN_VERSION" >> $GITHUB_ENV
 
-      - uses: rustdesk-org/run-on-arch-action@amd64-support
-        name: Build rustdesk sciter binary for ${{ matrix.job.arch }}
+      - uses: cloudydesk/run-on-arch-action@amd64-support
+        name: Build cloudydesk sciter binary for ${{ matrix.job.arch }}
         id: vcpkg
         with:
           arch: ${{ matrix.job.arch }}
@@ -1787,21 +1787,21 @@ jobs:
               exit 1
             fi
             head -n 100 "${VCPKG_ROOT}/buildtrees/ffmpeg/build-${{ matrix.job.vcpkg-triplet }}-rel-out.log" || true
-            # build rustdesk
+            # build cloudydesk
             python3 ./res/inline-sciter.py
             export CARGO_INCREMENTAL=0
             cargo build --features inline${{ matrix.job.extra_features }} --release --bins --jobs 1
             # make debian package
             mkdir -p ./Release
-            mv ./target/release/rustdesk ./Release/rustdesk
+            mv ./target/release/cloudydesk ./Release/cloudydesk
             wget -O ./Release/libsciter-gtk.so https://github.com/c-smile/sciter-sdk/raw/master/bin.lnx/${{ matrix.job.sciter_arch }}/libsciter-gtk.so
             export DEB_ARCH=${{ matrix.job.deb_arch }}
             ./build.py --package ./Release
 
-      - name: Rename rustdesk
+      - name: Rename cloudydesk
         shell: bash
         run: |
-          for name in rustdesk*??.deb; do
+          for name in cloudydesk*??.deb; do
               # use cp to duplicate deb files to fit other packages.
               cp "$name" "${name%%.deb}-${{ matrix.job.arch }}-sciter.deb"
           done
@@ -1813,18 +1813,18 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb
+            cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb
 
       - name: Upload deb
         uses: actions/upload-artifact@master
         if: env.UPLOAD_ARTIFACT == 'true'
         with:
-          name: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb
-          path: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb
+          name: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb
+          path: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb
 
   build-appimage:
     name: Build appimage ${{ matrix.job.target }}
-    needs: [build-rustdesk-linux]
+    needs: [build-cloudydesk-linux]
     runs-on: ubuntu-22.04
     if: ${{ inputs.upload-artifact }}
     strategy:
@@ -1842,12 +1842,12 @@ jobs:
       - name: Download Binary
         uses: actions/download-artifact@master
         with:
-          name: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.deb
+          name: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.deb
           path: .
 
       - name: Rename Binary
         run: |
-          mv rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.deb appimage/rustdesk.deb
+          mv cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}.deb appimage/cloudydesk.deb
 
       - name: Build appimage package
         shell: bash
@@ -1858,7 +1858,7 @@ jobs:
           sudo apt-get install -y libarchive-tools libfuse2
           # set-up appimage-builder
           # https://github.com/AppImage/AppImageKit/issues/1395
-          sudo pip3 install git+https://github.com/rustdesk-org/appimage-builder.git
+          sudo pip3 install git+https://github.com/cloudydesk/appimage-builder.git
           # run appimage-builder
           pushd appimage
           sudo appimage-builder --skip-tests --recipe ./AppImageBuilder-${{ matrix.job.arch }}.yml
@@ -1870,13 +1870,13 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            ./appimage/rustdesk-${{ env.VERSION }}-*.AppImage
+            ./appimage/cloudydesk-${{ env.VERSION }}-*.AppImage
 
   build-flatpak:
     name: Build flatpak ${{ matrix.job.target }}${{ matrix.job.suffix }}
     needs:
-      - build-rustdesk-linux
-      - build-rustdesk-linux-sciter
+      - build-cloudydesk-linux
+      - build-cloudydesk-linux-sciter
     runs-on: ${{ matrix.job.on }}
     if: ${{ inputs.upload-artifact }}
     strategy:
@@ -1915,15 +1915,15 @@ jobs:
       - name: Download Binary
         uses: actions/download-artifact@master
         with:
-          name: rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.deb
+          name: cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.deb
           path: .
 
       - name: Rename Binary
         run: |
-          mv rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.deb flatpak/rustdesk.deb
+          mv cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.deb flatpak/cloudydesk.deb
 
-      - uses: rustdesk-org/run-on-arch-action@amd64-support
-        name: Build rustdesk flatpak package for ${{ matrix.job.arch }}
+      - uses: cloudydesk/run-on-arch-action@amd64-support
+        name: Build cloudydesk flatpak package for ${{ matrix.job.arch }}
         id: flatpak
         with:
           arch: ${{ matrix.job.arch }}
@@ -1946,8 +1946,8 @@ jobs:
             # package
             pushd flatpak
             git clone https://github.com/flathub/shared-modules.git --depth=1
-            flatpak-builder --user --install-deps-from=flathub -y --force-clean --repo=repo ./build ./rustdesk.json
-            flatpak build-bundle ./repo rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.flatpak com.rustdesk.RustDesk
+            flatpak-builder --user --install-deps-from=flathub -y --force-clean --repo=repo ./build ./cloudydesk.json
+            flatpak build-bundle ./repo cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.flatpak com.cloudydesk.CloudyDesk
 
       - name: Publish flatpak package
         uses: softprops/action-gh-release@v1
@@ -1955,11 +1955,11 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            flatpak/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.flatpak
+            flatpak/cloudydesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.flatpak
 
-  build-rustdesk-web:
+  build-cloudydesk-web:
     if: False
-    name: build-rustdesk-web
+    name: build-cloudydesk-web
     runs-on: ubuntu-22.04
     permissions:
       contents: read
@@ -1990,7 +1990,7 @@ jobs:
           cd $(dirname $(dirname $(which flutter)))
           [[ "3.24.5" == ${{env.FLUTTER_VERSION}} ]] && git apply ${{ github.workspace }}/.github/patches/flutter_3.24.4_dropdown_menu_enableFilter.diff
 
-      # https://rustdesk.com/docs/en/dev/build/web/
+      # https://cloudydesk.com/docs/en/dev/build/web/
       - name: Build web
         shell: bash
         run: |
@@ -2006,7 +2006,7 @@ jobs:
           popd
 
           pushd flutter/web
-          wget https://github.com/rustdesk/doc.rustdesk.com/releases/download/console/web_deps.tar.gz
+          wget https://github.com/cloudydesk/doc.cloudydesk.com/releases/download/console/web_deps.tar.gz
           tar xzf web_deps.tar.gz
           popd
 
@@ -2016,7 +2016,7 @@ jobs:
           cp ../web/README.md web
           # TODO: Remove the following line when the web is almost complete.
           echo -e "\n\nThis build is for preview and not full functionality." >> web/README.md
-          dir_name="rustdesk-${{ env.VERSION }}-${{ env.RELEASE_NAME }}"
+          dir_name="cloudydesk-${{ env.VERSION }}-${{ env.RELEASE_NAME }}"
           mv web "${dir_name}" && tar czf "${dir_name}".tar.gz "${dir_name}"
           sha256sum "${dir_name}".tar.gz
           popd
@@ -2028,4 +2028,4 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            flutter/build/rustdesk-${{ env.VERSION }}-${{ env.RELEASE_NAME }}.tar.gz
+            flutter/build/cloudydesk-${{ env.VERSION }}-${{ env.RELEASE_NAME }}.tar.gz

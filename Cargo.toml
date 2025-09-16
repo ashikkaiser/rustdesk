@@ -1,15 +1,15 @@
 [package]
-name = "rustdesk"
+name = "cloudydesk"
 version = "1.4.2"
-authors = ["rustdesk <info@rustdesk.com>"]
+authors = ["cloudydesk <info@cloudydesk.com>"]
 edition = "2021"
 build= "build.rs"
-description = "RustDesk Remote Desktop"
-default-run = "rustdesk"
+description = "CloudyDesk Remote Desktop"
+default-run = "cloudydesk"
 rust-version = "1.75"
 
 [lib]
-name = "librustdesk"
+name = "libcloudydesk"
 crate-type = ["cdylib", "staticlib", "rlib"]
 
 [[bin]]
@@ -56,8 +56,8 @@ cfg-if = "1.0"
 lazy_static = "1.4"
 sha2 = "0.10"
 repng = "0.2"
-parity-tokio-ipc = { git = "https://github.com/rustdesk-org/parity-tokio-ipc" }
-magnum-opus = { git = "https://github.com/rustdesk-org/magnum-opus" }
+parity-tokio-ipc = { git = "https://github.com/cloudydesk/parity-tokio-ipc" }
+magnum-opus = { git = "https://github.com/cloudydesk/magnum-opus" }
 dasp = { version = "0.11", features = ["signal", "interpolate-linear", "interpolate"], optional = true }
 rubato = { version = "0.12", optional = true }
 samplerate = { version = "0.2", optional = true }
@@ -70,7 +70,7 @@ default-net = "0.14"
 wol-rs = "1.0"
 flutter_rust_bridge = { version = "=1.80", features = ["uuid"], optional = true}
 errno = "0.3"
-rdev = { git = "https://github.com/rustdesk-org/rdev" }
+rdev = { git = "https://github.com/cloudydesk/rdev" }
 url = { version = "2.3", features = ["serde"] }
 crossbeam-queue = "0.3"
 hex = "0.4"
@@ -82,23 +82,23 @@ zip = "0.6"
 shutdown_hooks = "0.1"
 totp-rs = { version = "5.4", default-features = false, features = ["gen_secret", "otpauth"] }
 stunclient = "0.4"
-kcp-sys= { git = "https://github.com/rustdesk-org/kcp-sys"}
+kcp-sys= { git = "https://github.com/cloudydesk/kcp-sys"}
 [target.'cfg(not(target_os = "linux"))'.dependencies]
-# https://github.com/rustdesk/rustdesk/discussions/10197, not use cpal on linux
-cpal = { git = "https://github.com/rustdesk-org/cpal", branch = "osx-screencapturekit" }
+# https://github.com/cloudydesk/cloudydesk/discussions/10197, not use cpal on linux
+cpal = { git = "https://github.com/cloudydesk/cpal", branch = "osx-screencapturekit" }
 ringbuf = "0.3"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 mac_address = "1.1"
-sciter-rs = { git = "https://github.com/rustdesk-org/rust-sciter", branch = "dyn" }
+sciter-rs = { git = "https://github.com/cloudydesk/rust-sciter", branch = "dyn" }
 sys-locale = "0.3"
 enigo = { path = "libs/enigo", features = [ "with_serde" ] }
 clipboard = { path = "libs/clipboard" }
 ctrlc = "3.2"
 # arboard = { version = "3.4", features = ["wayland-data-control"] }
-arboard = { git = "https://github.com/rustdesk-org/arboard", features = ["wayland-data-control"] }
-clipboard-master = { git = "https://github.com/rustdesk-org/clipboard-master" }
-portable-pty = { git = "https://github.com/rustdesk-org/wezterm", branch = "rustdesk/pty_based_0.8.1", package = "portable-pty" }
+arboard = { git = "https://github.com/cloudydesk/arboard", features = ["wayland-data-control"] }
+clipboard-master = { git = "https://github.com/cloudydesk/clipboard-master" }
+portable-pty = { git = "https://github.com/cloudydesk/wezterm", branch = "cloudydesk/pty_based_0.8.1", package = "portable-pty" }
 
 system_shutdown = "4.0"
 qrcode-generator = "4.1"
@@ -130,7 +130,7 @@ winreg = "0.11"
 windows-service = "0.6"
 virtual_display = { path = "libs/virtual_display" }
 remote_printer = { path = "libs/remote_printer" }
-impersonate_system = { git = "https://github.com/rustdesk-org/impersonate-system" }
+impersonate_system = { git = "https://github.com/cloudydesk/impersonate-system" }
 shared_memory = "0.12"
 tauri-winrt-notification = "0.1"
 runas = "1.2"
@@ -151,14 +151,14 @@ foreign-types = "0.3"
 
 [target.'cfg(any(target_os = "macos", target_os = "linux", target_os = "windows"))'.dependencies]
 tray-icon = { git = "https://github.com/tauri-apps/tray-icon" }
-tao = { git = "https://github.com/rustdesk-org/tao", branch = "dev" }
+tao = { git = "https://github.com/cloudydesk/tao", branch = "dev" }
 image = "0.24"
 
 [target.'cfg(any(target_os = "macos", target_os = "linux"))'.dependencies]
-keepawake = { git = "https://github.com/rustdesk-org/keepawake-rs" }
+keepawake = { git = "https://github.com/cloudydesk/keepawake-rs" }
 
 [target.'cfg(any(target_os = "windows", target_os = "linux"))'.dependencies]
-wallpaper = { git = "https://github.com/rustdesk-org/wallpaper.rs" }
+wallpaper = { git = "https://github.com/cloudydesk/wallpaper.rs" }
 tiny-skia = "0.11"
 softbuffer = "0.4"
 fontdb = "0.23"
@@ -166,21 +166,21 @@ bytemuck = "1.23"
 ttf-parser = "0.25"
 
 [target.'cfg(any(target_os = "macos", target_os = "windows"))'.dependencies]
-# https://github.com/rustdesk/rustdesk-server-pro/issues/189, using native-tls for better tls support
-reqwest = { git = "https://github.com/rustdesk-org/reqwest", features = ["blocking", "socks", "json", "native-tls", "gzip"], default-features=false }
+# https://github.com/cloudydesk/cloudydesk-server-pro/issues/189, using native-tls for better tls support
+reqwest = { git = "https://github.com/cloudydesk/reqwest", features = ["blocking", "socks", "json", "native-tls", "gzip"], default-features=false }
 
 [target.'cfg(not(any(target_os = "macos", target_os = "windows")))'.dependencies]
-reqwest = { git = "https://github.com/rustdesk-org/reqwest", features = ["blocking", "socks", "json", "rustls-tls", "rustls-tls-native-roots", "gzip"], default-features=false }
+reqwest = { git = "https://github.com/cloudydesk/reqwest", features = ["blocking", "socks", "json", "rustls-tls", "rustls-tls-native-roots", "gzip"], default-features=false }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 psimple = { package = "libpulse-simple-binding", version = "2.27" }
 pulse = { package = "libpulse-binding", version = "2.27" }
-rust-pulsectl = { git = "https://github.com/rustdesk-org/pulsectl" }
+rust-pulsectl = { git = "https://github.com/cloudydesk/pulsectl" }
 async-process = "1.7"
-evdev = { git="https://github.com/rustdesk-org/evdev" }
+evdev = { git="https://github.com/cloudydesk/evdev" }
 dbus = "0.9"
 dbus-crossroads = "0.5"
-pam = { git="https://github.com/rustdesk-org/pam" }
+pam = { git="https://github.com/cloudydesk/pam" }
 users = { version = "0.11" }
 x11-clipboard = {git="https://github.com/clslaid/x11-clipboard", branch = "feat/store-batch", optional = true}
 x11rb =  {version = "0.12", features = ["all-extensions"], optional = true}
@@ -195,7 +195,7 @@ winit = "0.30"
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = "0.13"
 jni = "0.21"
-android-wakelock = { git = "https://github.com/rustdesk-org/android-wakelock" }
+android-wakelock = { git = "https://github.com/cloudydesk/android-wakelock" }
 
 [workspace]
 members = ["libs/scrap", "libs/hbb_common", "libs/enigo", "libs/clipboard", "libs/virtual_display", "libs/virtual_display/dylib", "libs/portable", "libs/remote_printer"]
@@ -203,9 +203,9 @@ exclude = ["vdi/host", "examples/custom_plugin"]
 
 [package.metadata.winres]
 LegalCopyright = "Copyright © 2025 Purslane Ltd. All rights reserved."
-ProductName = "RustDesk"
-FileDescription = "RustDesk Remote Desktop"
-OriginalFilename = "rustdesk.exe"
+ProductName = "CloudyDesk"
+FileDescription = "CloudyDesk Remote Desktop"
+OriginalFilename = "cloudydesk.exe"
 
 [target.'cfg(target_os="windows")'.build-dependencies]
 winres = "0.1"
@@ -221,8 +221,8 @@ hound = "3.5"
 docopt = "1.1"
 
 [package.metadata.bundle]
-name = "RustDesk"
-identifier = "com.carriez.rustdesk"
+name = "CloudyDesk"
+identifier = "com.carriez.cloudydesk"
 icon = ["res/32x32.png", "res/128x128.png", "res/128x128@2x.png"]
 osx_minimum_system_version = "10.14"
 

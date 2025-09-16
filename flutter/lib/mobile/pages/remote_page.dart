@@ -367,7 +367,7 @@ class _RemotePageState extends State<RemotePage> with WidgetsBindingObserver {
         return false;
       },
       child: Scaffold(
-          // workaround for https://github.com/rustdesk/rustdesk/issues/3131
+          // workaround for https://github.com/cloudydesk/cloudydesk/issues/3131
           floatingActionButtonLocation: keyboardIsVisible
               ? FABLocation(FloatingActionButtonLocation.endFloat, 0, -35)
               : null,

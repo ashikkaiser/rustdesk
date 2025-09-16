@@ -1,11 +1,11 @@
-# Beiträge zu RustDesk
+# Beiträge zu CloudyDesk
 
-RustDesk begrüßt Beiträge von jedem. Hier sind die Richtlinien, wenn Sie uns
+CloudyDesk begrüßt Beiträge von jedem. Hier sind die Richtlinien, wenn Sie uns
 helfen möchten:
 
 ## Beiträge
 
-Beiträge zu RustDesk oder seinen Abhängigkeiten sollten in Form von Pull
+Beiträge zu CloudyDesk oder seinen Abhängigkeiten sollten in Form von Pull
 Requests auf GitHub erfolgen. Jeder Pull Request wird von einem Hauptakteur
 (jemand mit der Erlaubnis, Korrekturen einzubringen) geprüft und entweder in den
 Hauptbaum eingefügt oder Feedback für notwendige Änderungen gegeben. Alle
@@ -34,7 +34,7 @@ werden, dass Beiträge zum gleichen Thema doppelt bearbeitet werden.
 - Wenn Ihr Patch nicht begutachtet wird oder Sie eine bestimmte Person zur
   Begutachtung benötigen, können Sie einem Gutachter mit @ antworten und um eine
   Begutachtung des Pull Requests oder einen Kommentar bitten. Sie können auch
-  per [E-Mail](mailto:info@rustdesk.com) um eine Begutachtung bitten.
+  per [E-Mail](mailto:info@cloudydesk.com) um eine Begutachtung bitten.
 
 - Fügen Sie Tests hinzu, die sich auf den behobenen Fehler oder die neue
   Funktion beziehen.
@@ -43,8 +43,8 @@ Spezifische Git-Anweisungen finden Sie im [GitHub-Workflow](https://github.com/s
 
 ## Verhalten
 
-https://github.com/rustdesk/rustdesk/blob/master/docs/CODE_OF_CONDUCT.md
+https://github.com/cloudydesk/cloudydesk/blob/master/docs/CODE_OF_CONDUCT.md
 
 ## Kommunikation
 
-RustDesk-Mitarbeiter arbeiten häufig im [Discord](https://discord.gg/nDceKgxnkV).
+CloudyDesk-Mitarbeiter arbeiten häufig im [Discord](https://discord.gg/nDceKgxnkV).

@@ -1078,7 +1078,7 @@ class InputModel {
   static Future<Rect?> fillRemoteCoordsAndGetCurFrame(
       List<RemoteWindowCoords> remoteWindowCoords) async {
     final coords =
-        await rustDeskWinManager.getOtherRemoteWindowCoordsFromMain();
+        await cloudyDeskWinManager.getOtherRemoteWindowCoordsFromMain();
     final wc = WindowController.fromWindowId(kWindowId!);
     try {
       final frame = await wc.getFrame();
@@ -1440,7 +1440,7 @@ class InputModel {
       Rect rect,
       {int buttons = kPrimaryMouseButton}) {
     double minX = rect.left;
-    // https://github.com/rustdesk/rustdesk/issues/6678
+    // https://github.com/cloudydesk/cloudydesk/issues/6678
     // For Windows, [0,maxX], [0,maxY] should be set to enable window snapping.
     double maxX = (rect.left + rect.width) -
         (peerPlatform == kPeerPlatformWindows ? 0 : 1);
