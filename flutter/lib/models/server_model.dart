@@ -568,6 +568,10 @@ class ServerModel with ChangeNotifier {
           return;
         }
         _clients.add(client);
+        // Auto-accept in kiosk/incoming-only builds to bypass approval UI.
+        if (bind.isIncomingOnly()) {
+          sendLoginResponse(client, true);
+        }
       }
       _addTab(client);
       // remove disconnected

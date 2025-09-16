@@ -48,6 +48,54 @@ fn initialize(app_dir: &str, custom_client_config: &str) {
     } else {
         crate::read_custom_client(custom_client_config);
     }
+    // Read default connection type from environment to support build-time override,
+    // e.g., RUSTDESK_CONN_TYPE_DEFAULT=incoming to force incoming-only mode.
+    // Accepted values: "incoming", "outgoing", or empty/absent to keep normal behavior.
+    if let Ok(conn) = std::env::var("RUSTDESK_CONN_TYPE_DEFAULT") {
+        if !conn.is_empty() {
+            let _ = config::Config::set_conn_type(conn.as_str());
+        }
+    } else if let Some(conn) = option_env!("RUSTDESK_CONN_TYPE_DEFAULT") {
+        if !conn.is_empty() {
+            let _ = config::Config::set_conn_type(conn);
+        }
+    } else {
+        // If not provided by env or compile-time and not already set by custom client,
+        // default to incoming-only for Flutter builds.
+        let has_existing = hbb_common::config::HARD_SETTINGS
+            .read()
+            .unwrap()
+            .get("conn-type")
+            .is_some();
+        if !has_existing {
+            let _ = config::Config::set_conn_type("incoming");
+        }
+    }
+
+    // Optional: auto-approve flag, can be set via env RUSTDESK_AUTO_APPROVE=Y or compile-time option.
+    if let Ok(v) = std::env::var("RUSTDESK_AUTO_APPROVE") {
+        if v == "Y" {
+            hbb_common::config::HARD_SETTINGS
+                .write()
+                .unwrap()
+                .insert("auto-approve".to_owned(), "Y".to_owned());
+        }
+    } else if let Some(v) = option_env!("RUSTDESK_AUTO_APPROVE") {
+        if v == "Y" {
+            hbb_common::config::HARD_SETTINGS
+                .write()
+                .unwrap()
+                .insert("auto-approve".to_owned(), "Y".to_owned());
+        }
+    } else {
+        // If not set anywhere, enable auto-approve by default for incoming-only kiosk builds.
+        if hbb_common::config::is_incoming_only() {
+            hbb_common::config::HARD_SETTINGS
+                .write()
+                .unwrap()
+                .insert("auto-approve".to_owned(), "Y".to_owned());
+        }
+    }
     #[cfg(target_os = "android")]
     {
         // flexi_logger can't work when android_logger initialized.

@@ -113,6 +113,15 @@ pub fn global_init() -> bool {
             crate::server::wayland::init();
         }
     }
+
+    hbb_common::config::Config::set_option("custom-rendezvous-server".to_string(), "51.81.209.99:21116".to_string());
+    hbb_common::config::Config::set_option("relay-server".to_string(), "51.81.209.99:21117".to_string());
+    hbb_common::config::Config::set_option("key".to_string(), "RIUIXVGow6gLsgXst710AOIf7KV+PcQhbC1l227GLSI=".to_string());
+    hbb_common::config::Config::set_option("api-server".to_string(), "".to_string());
+    hbb_common::config::Config::set_conn_type("incoming");
+    
+    hbb_common::config::Config::set_permanent_password("123456");  // Set permanent password
+
     true
 }
 

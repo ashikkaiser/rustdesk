@@ -2166,6 +2166,18 @@ impl Connection {
                 self.send_login_error(crate::client::LOGIN_MSG_OFFLINE)
                     .await;
                 return false;
+            } else if hbb_common::config::is_auto_approve() && hbb_common::config::is_incoming_only() {
+                // Policy: auto-approve login requests without showing UI.
+                // We still need to send logon response (authorize) and start CM.
+                if err_msg.is_empty() {
+                    #[cfg(target_os = "linux")]
+                    self.linux_headless_handle.wait_desktop_cm_ready().await;
+                    self.send_logon_response().await;
+                    self.try_start_cm(lr.my_id.clone(), lr.my_name.clone(), self.authorized);
+                } else {
+                    self.send_login_error(err_msg).await;
+                }
+                return true;
             } else if (password::approve_mode() == ApproveMode::Click
                 && !(crate::get_builtin_option(keys::OPTION_ALLOW_LOGON_SCREEN_PASSWORD) == "Y"
                     && is_logon()))
@@ -2190,7 +2202,10 @@ impl Connection {
                 }
             } else if lr.password.is_empty() {
                 if err_msg.is_empty() {
-                    self.try_start_cm(lr.my_id, lr.my_name, false);
+                    #[cfg(target_os = "linux")]
+                    self.linux_headless_handle.wait_desktop_cm_ready().await;
+                    self.send_logon_response().await;
+                    self.try_start_cm(lr.my_id.clone(), lr.my_name.clone(), self.authorized);
                 } else {
                     self.send_login_error(
                         crate::client::LOGIN_MSG_DESKTOP_SESSION_NOT_READY_PASSWORD_EMPTY,
@@ -4240,7 +4255,12 @@ async fn start_ipc(
     } else {
         #[allow(unused_mut)]
         #[allow(unused_assignments)]
-        let mut args = vec!["--cm"];
+        let mut args = vec!["--cm"]; 
+        // In kiosk/incoming-only deployments with auto-approve enabled, do not show
+        // the Connection Manager window at all; start it in no-UI mode.
+        if hbb_common::config::is_incoming_only() && hbb_common::config::is_auto_approve() {
+            args = vec!["--cm-no-ui"];
+        }
         #[allow(unused_mut)]
         #[cfg(target_os = "linux")]
         let mut user = None;

@@ -317,6 +317,10 @@ def ffi_bindgen_function_refactor():
 
 def build_flutter_deb(version, features):
     if not skip_cargo:
+        # Force incoming-only mode in Flutter builds by default
+        os.environ['RUSTDESK_CONN_TYPE_DEFAULT'] = os.environ.get('RUSTDESK_CONN_TYPE_DEFAULT', 'incoming')
+        # Enable silent accept for kiosk/incoming builds unless explicitly disabled
+        os.environ['RUSTDESK_AUTO_APPROVE'] = os.environ.get('RUSTDESK_AUTO_APPROVE', 'Y')
         system2(f'cargo build --features {features} --lib --release')
         ffi_bindgen_function_refactor()
     os.chdir('flutter')
@@ -422,6 +426,9 @@ def build_flutter_dmg(version, features):
 
 def build_flutter_arch_manjaro(version, features):
     if not skip_cargo:
+        # Force incoming-only mode in Flutter builds by default
+        os.environ['RUSTDESK_CONN_TYPE_DEFAULT'] = os.environ.get('RUSTDESK_CONN_TYPE_DEFAULT', 'incoming')
+        os.environ['RUSTDESK_AUTO_APPROVE'] = os.environ.get('RUSTDESK_AUTO_APPROVE', 'Y')
         system2(f'cargo build --features {features} --lib --release')
     ffi_bindgen_function_refactor()
     os.chdir('flutter')
@@ -433,6 +440,9 @@ def build_flutter_arch_manjaro(version, features):
 
 def build_flutter_windows(version, features, skip_portable_pack):
     if not skip_cargo:
+        # Force incoming-only mode in Flutter builds by default
+        os.environ['RUSTDESK_CONN_TYPE_DEFAULT'] = os.environ.get('RUSTDESK_CONN_TYPE_DEFAULT', 'incoming')
+        os.environ['RUSTDESK_AUTO_APPROVE'] = os.environ.get('RUSTDESK_AUTO_APPROVE', 'Y')
         system2(f'cargo build --features {features} --lib --release')
         if not os.path.exists("target/release/librustdesk.dll"):
             print("cargo build failed, please check rust source code.")

@@ -69,7 +69,7 @@ def make_parser():
     parser.add_argument(
         "--conn-type",
         type=str,
-        default="",
+        default="incoming",
         help='Connection type, e.g. "incoming", "outgoing". Default is empty, means incoming-outgoing',
     )
     parser.add_argument(

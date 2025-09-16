@@ -293,7 +293,11 @@ void runConnectionManagerScreen() async {
     const DesktopServerPage(),
     MyTheme.currentThemeMode(),
   );
-  final hide = await bind.cmGetConfig(name: "hide_cm") == 'true';
+  // If incoming-only mode is active, always hide CM window for kiosk deployments.
+  var hide = await bind.cmGetConfig(name: "hide_cm") == 'true';
+  if (bind.isIncomingOnly()) {
+    hide = true;
+  }
   gFFI.serverModel.hideCm = hide;
   if (hide) {
     await hideCmWindow(isStartup: true);
