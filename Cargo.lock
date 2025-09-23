@@ -3741,8 +3741,8 @@ checksum = "135b12329e5e3ce057a9f972339ea52bc954fe1e9358ef27f95e89716fbc5424"
 
 [[package]]
 name = "hwcodec"
-version = "0.7.1"
-source = "git+https://github.com/cloudydesk/hwcodec#cbfe524fca0181adcb37b78c57db8c687ba3b8e7"
+version = "0.5.0"
+source = "git+https://github.com/cloudydesk/hwcodec?tag=0.5.0#470d18826dc334b964c51acf0c6ac3bcf56f56ad"
 dependencies = [
  "bindgen 0.59.2",
  "cc",
