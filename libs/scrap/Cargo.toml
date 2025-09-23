@@ -60,6 +60,7 @@ gstreamer-video = { version = "0.16", optional = true }
 
 [dependencies.hwcodec]
 git = "https://github.com/cloudydesk/hwcodec"
+tag = "0.5.0"
 optional = true
 
 [target.'cfg(any(target_os = "windows", target_os = "linux"))'.dependencies]
