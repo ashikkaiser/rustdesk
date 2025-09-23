@@ -80,37 +80,9 @@ jobs:
           cargo install flutter_rust_bridge_codegen --version ${{ env.FLUTTER_RUST_BRIDGE_VERSION }} --features "uuid" --locked
           pushd flutter && sed -i -e 's/extended_text: 14.0.0/extended_text: 13.0.0/g' pubspec.yaml && flutter pub get && popd
 
-      - name: Pre-fetch Cargo dependencies
-        shell: bash
-        run: |
-          # Configure git for CI environment
-          git config --global user.email "ci@github.com"
-          git config --global user.name "GitHub CI"
-          git config --global advice.detachedHead false
-          # Pre-populate cargo cache to avoid git metadata issues during bridge generation
-          CARGO_NET_GIT_FETCH_WITH_CLI=true cargo fetch --verbose || true
-          # Try to specifically update hwcodec dependency
-          CARGO_NET_GIT_FETCH_WITH_CLI=true cargo update --package hwcodec || true
-
       - name: Run flutter rust bridge
         run: |
-          # Run with additional flags and environment variables to handle dependency issues
-          CARGO_NET_GIT_FETCH_WITH_CLI=true ~/.cargo/bin/flutter_rust_bridge_codegen \
-            --rust-input ./src/flutter_ffi.rs \
-            --dart-output ./flutter/lib/generated_bridge.dart \
-            --c-output ./flutter/macos/Runner/bridge_generated.h \
-            --skip-deps-check \
-            --rust-crate-dir ./ \
-            --verbose || true
-          # Fallback: try without skip-deps-check if the above fails
-          if [ ! -f ./flutter/lib/generated_bridge.dart ]; then
-            echo "First attempt failed, trying without --skip-deps-check..."
-            CARGO_NET_GIT_FETCH_WITH_CLI=true ~/.cargo/bin/flutter_rust_bridge_codegen \
-              --rust-input ./src/flutter_ffi.rs \
-              --dart-output ./flutter/lib/generated_bridge.dart \
-              --c-output ./flutter/macos/Runner/bridge_generated.h \
-              --rust-crate-dir ./
-          fi
+          ~/.cargo/bin/flutter_rust_bridge_codegen --rust-input ./src/flutter_ffi.rs --dart-output ./flutter/lib/generated_bridge.dart --c-output ./flutter/macos/Runner/bridge_generated.h
           cp ./flutter/macos/Runner/bridge_generated.h ./flutter/ios/Runner/bridge_generated.h
 
       - name: Upload Artifact
