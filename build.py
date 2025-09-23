@@ -603,7 +603,7 @@ def main():
                 pass
             else:
                 # system2(
-                #     'mv target/release/bundle/deb/cloudydesk*.deb ./flutter/cloudydesk.deb')
+                #     'mv target/release/bundle/deb/cloudydesk*.deb ./flutter/cloudydesk.deb') ok
                 build_flutter_deb(version, features)
         else:
             system2('cargo bundle --release --features ' + features)
