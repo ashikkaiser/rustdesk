@@ -9,7 +9,7 @@ env:
   CARGO_EXPAND_VERSION: "1.0.95"
   FLUTTER_VERSION: "3.22.3"
   FLUTTER_RUST_BRIDGE_VERSION: "1.80.1"
-  RUST_VERSION: "1.75" # https://github.com/cloudydesk/cloudydesk/discussions/7503
+  RUST_VERSION: "1.82" # Updated to support edition2024 and newer cargo features
 
 jobs:
   generate_bridge:
@@ -83,6 +83,9 @@ jobs:
       - name: Update Cargo dependencies
         shell: bash
         run: |
+          # Clear cargo registry cache to avoid edition2024 issues
+          rm -rf ~/.cargo/registry/cache/index.crates.io-*
+          rm -rf ~/.cargo/registry/src/index.crates.io-*
           # Update all cargo dependencies to ensure git repositories are properly resolved
           cargo update --verbose
           # Specifically ensure hwcodec dependency is properly resolved
