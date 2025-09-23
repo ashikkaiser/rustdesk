@@ -1463,7 +1463,7 @@ if exist \"{tmp_path}\\{app_name} Tray.lnk\" del /f /q \"{tmp_path}\\{app_name} 
         Config::set_option("api-server".into(), lic.api);
     }
 
-    let tray_shortcuts = if config::is_outgoing_only() {
+    let tray_shortcuts = if config::is_outgoing_only() && !options.contains("autostart") {
         "".to_owned()
     } else {
         format!("

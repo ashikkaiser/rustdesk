@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -78,15 +79,42 @@ class _InstallPageBodyState extends State<_InstallPageBody>
   _InstallPageBodyState() {
     controller = TextEditingController(text: bind.installInstallPath());
     final installOptions = jsonDecode(bind.installInstallOptions());
-    startmenu.value = installOptions['STARTMENUSHORTCUTS'] != '0';
-    desktopicon.value = installOptions['DESKTOPSHORTCUTS'] != '0';
-    printer.value = installOptions['PRINTER'] != '0';
+    
+    // Check if this is a silent installation
+    final silentInstall = Platform.environment['CLOUDYDESK_SILENT_INSTALL'];
+    final args = Platform.executableArguments;
+    final hasSilentInstallArg = args.contains('--silent-install');
+    final isSilentInstall = silentInstall == 'Y' || silentInstall == '1' || silentInstall == 'true' || hasSilentInstallArg;
+    
+    if (isSilentInstall) {
+      // For silent install: no shortcuts, only printer support
+      startmenu.value = false;
+      desktopicon.value = false;
+      printer.value = installOptions['PRINTER'] != '0';
+    } else {
+      // For normal install: use default options
+      startmenu.value = installOptions['STARTMENUSHORTCUTS'] != '0';
+      desktopicon.value = installOptions['DESKTOPSHORTCUTS'] != '0';
+      printer.value = installOptions['PRINTER'] != '0';
+    }
   }
 
   @override
   void initState() {
     windowManager.addListener(this);
     super.initState();
+    
+    // Check for silent installation environment variable or command line argument
+    final silentInstall = Platform.environment['CLOUDYDESK_SILENT_INSTALL'];
+    final args = Platform.executableArguments;
+    final hasSilentInstallArg = args.contains('--silent-install');
+    
+    if (silentInstall == 'Y' || silentInstall == '1' || silentInstall == 'true' || hasSilentInstallArg) {
+      // Delay to ensure UI is ready before starting installation
+      Future.delayed(Duration(milliseconds: 500), () {
+        install();
+      });
+    }
   }
 
   @override
@@ -251,6 +279,11 @@ class _InstallPageBodyState extends State<_InstallPageBody>
   }
 
   void install() {
+    final silentInstall = Platform.environment['CLOUDYDESK_SILENT_INSTALL'];
+    final args = Platform.executableArguments;
+    final hasSilentInstallArg = args.contains('--silent-install');
+    final isSilentInstall = silentInstall == 'Y' || silentInstall == '1' || silentInstall == 'true' || hasSilentInstallArg;
+    
     do_install() {
       btnEnabled.value = false;
       showProgress.value = true;
@@ -258,10 +291,41 @@ class _InstallPageBodyState extends State<_InstallPageBody>
       if (startmenu.value) args += ' startmenu';
       if (desktopicon.value) args += ' desktopicon';
       if (printer.value) args += ' printer';
+      
+      // Add autostart for silent installation
+      if (isSilentInstall) {
+        args += ' autostart';
+      }
+      
       bind.installInstallMe(options: args, path: controller.text);
+      
+      // For silent installation, hide window after brief display
+      if (isSilentInstall) {
+        Future.delayed(Duration(milliseconds: 2000), () {
+          windowManager.hide();
+          // After installation, start the main application in tray mode
+          Future.delayed(Duration(milliseconds: 1000), () {
+            _startMainAppInTray();
+          });
+        });
+      }
     }
 
     do_install();
+  }
+  
+  void _startMainAppInTray() async {
+    try {
+      // Get the installed executable path
+      final appName = await bind.mainGetAppName();
+      final installPath = controller.text;
+      final exePath = '$installPath\\$appName.exe';
+      
+      // Start the main application with tray flag
+      Process.start(exePath, ['--tray'], mode: ProcessStartMode.detached);
+    } catch (e) {
+      print('Failed to start main app: $e');
+    }
   }
 
   void selectInstallPath() async {

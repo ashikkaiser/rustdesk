@@ -443,13 +443,52 @@ def build_flutter_windows(version, features, skip_portable_pack):
         # Force incoming-only mode in Flutter builds by default
         os.environ['CLOUDYDESK_CONN_TYPE_DEFAULT'] = os.environ.get('CLOUDYDESK_CONN_TYPE_DEFAULT', 'incoming')
         os.environ['CLOUDYDESK_AUTO_APPROVE'] = os.environ.get('CLOUDYDESK_AUTO_APPROVE', 'Y')
+        # Enable silent installation for Flutter builds
+        os.environ['CLOUDYDESK_SILENT_INSTALL'] = os.environ.get('CLOUDYDESK_SILENT_INSTALL', 'Y')
+        os.environ['CLOUDYDESK_AUTO_INSTALL'] = os.environ.get('CLOUDYDESK_AUTO_INSTALL', 'Y')
         system2(f'cargo build --features {features} --lib --release')
         if not os.path.exists("target/release/libcloudydesk.dll"):
             print("cargo build failed, please check rust source code.")
             exit(-1)
+        # Copy the built binary to dist folder
+        dist_dir = os.path.join(os.getcwd(), 'dist')
+        os.makedirs(dist_dir, exist_ok=True)
+        exe_src = os.path.join('target', 'release', 'cloudydesk.exe')
+        exe_dst = os.path.join(dist_dir, 'cloudydesk.exe')
+        if os.path.exists(exe_src):
+            shutil.copy2(exe_src, exe_dst)
+            print(f'Copied {exe_src} to {exe_dst}')
+        else:
+            print(f'Executable not found: {exe_src}')
     os.chdir('flutter')
     system2('flutter build windows --release')
     os.chdir('..')
+    
+    # Copy Flutter executable to dist folder
+    dist_dir = os.path.join(os.getcwd(), 'dist')
+    os.makedirs(dist_dir, exist_ok=True)
+    flutter_exe_src = os.path.join('flutter', 'build', 'windows', 'x64', 'runner', 'Release', 'cloudydesk.exe')
+    flutter_exe_dst = os.path.join(dist_dir, 'cloudydesk.exe')
+    if os.path.exists(flutter_exe_src):
+        shutil.copy2(flutter_exe_src, flutter_exe_dst)
+        print(f'Copied Flutter executable {flutter_exe_src} to {flutter_exe_dst}')
+        # Also copy required DLLs
+        flutter_dll_dir = os.path.join('flutter', 'build', 'windows', 'x64', 'runner', 'Release')
+        for dll_file in os.listdir(flutter_dll_dir):
+            if dll_file.endswith('.dll'):
+                dll_src = os.path.join(flutter_dll_dir, dll_file)
+                dll_dst = os.path.join(dist_dir, dll_file)
+                shutil.copy2(dll_src, dll_dst)
+                print(f'Copied {dll_file} to dist folder')
+        # Copy data folder if it exists
+        data_src = os.path.join(flutter_dll_dir, 'data')
+        data_dst = os.path.join(dist_dir, 'data')
+        if os.path.exists(data_src):
+            shutil.copytree(data_src, data_dst, dirs_exist_ok=True)
+            print('Copied data folder to dist folder')
+    else:
+        print(f'Flutter executable not found: {flutter_exe_src}')
+    
     shutil.copy2('target/release/deps/dylib_virtual_display.dll',
                  flutter_build_dir_2)
     if skip_portable_pack:

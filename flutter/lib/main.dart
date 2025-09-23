@@ -108,6 +108,9 @@ Future<void> main(List<String> args) async {
     runConnectionManagerScreen();
   } else if (args.contains('--install')) {
     runInstallPage();
+  } else if (args.contains('--silent-install')) {
+    debugPrint("--silent-install started");
+    runInstallPage();
   } else {
     desktopType = DesktopType.main;
     await windowManager.ensureInitialized();

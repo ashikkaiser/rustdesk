@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" viewBox="66.993 897.484 26 26"><linearGradient id="a" x1=".148" x2=".845" y1=".851" y2=".154" gradientTransform="matrix(26.301 0 0 26.331 90.674 911.757)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#0071ff"/><stop offset="1" stop-color="#00bfe1"/></linearGradient><defs><linearGradient xlink:href="#a" id="b" x1=".148" x2=".845" y1=".851" y2=".154" gradientTransform="matrix(26.00048 0 0 25.99935 66.993 897.485)" gradientUnits="userSpaceOnUse"/></defs><path fill="url(#b)" d="m89.318 903.552-2.135 2.122c-.376.337-.558.879-.347 1.337 1.422 2.976.882 6.524-1.452 8.856-2.335 2.331-5.887 2.87-8.866 1.449-.439-.197-.954-.03-1.292.312l-2.17 2.167a1.154 1.154 0 0 0 .208 1.81 13.005 13.005 0 0 0 15.91-1.912 12.97 12.97 0 0 0 1.956-15.887 1.154 1.154 0 0 0-1.812-.254zm-18.467-2.305a12.969 12.969 0 0 0-2.02 15.885 1.154 1.154 0 0 0 1.812.254l2.124-2.11c.385-.336.572-.884.359-1.348-1.423-2.976-.884-6.524 1.451-8.856 2.334-2.332 5.887-2.871 8.866-1.45.434.194.942.033 1.281-.3l2.182-2.18a1.152 1.152 0 0 0-.208-1.81 13.009 13.009 0 0 0-15.893 1.973z"/></svg>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00c6ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0072ff;stop-opacity:1" />
+    </linearGradient>
+    <style>
+      .cls-1 { fill: url(#grad1); }
+      .cls-2 { fill: #0d1b2a; }
+    </style>
+  </defs>
+  <polygon class="cls-1" points="111.14 60.66 131.34 80.86 60.67 80.86 60.67 60.66 111.14 60.66"/>
+  <polygon class="cls-1" points=".09 60.66 .09 131.33 20.28 151.53 20.28 80.86 40.47 80.86 40.47 60.66 .09 60.66"/>
+  <polygon class="cls-1" points="171.72 40.47 191.91 60.66 191.91 131.33 171.72 131.33 80.86 131.33 60.67 111.14 171.72 111.14 171.72 40.47"/>
+  <polygon class="cls-2" points="60.67 111.14 40.47 90.95 40.47 80.86 60.67 80.86 60.67 111.14"/>
+  <polygon class="cls-2" points="40.47 20.28 40.47 60.66 60.67 60.66 60.67 40.47 171.72 40.47 151.53 20.28 40.47 20.28"/>
+  <rect class="cls-2" x="40.47" y="60.67" width="20.19" height="20.19"/>
+  <polygon class="cls-2" points="131.34 151.53 20.28 151.53 40.47 171.72 151.53 171.72 151.53 101.05 131.34 80.86 131.34 151.53"/>
+</svg>
