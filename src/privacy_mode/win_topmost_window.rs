@@ -249,11 +249,13 @@ impl PrivacyModeImpl {
             };
 
             let session_id = WTSGetActiveConsoleSessionId();
+            log::info!("Creating privacy process in session: {}", session_id);
             let token = get_user_token(session_id, true);
             if token.is_null() {
                 bail!("Failed to get token of current user");
             }
 
+            log::info!("Starting privacy process: {}", cmdline);
             let create_res = CreateProcessAsUserW(
                 token,
                 NULL as _,
@@ -276,11 +278,13 @@ impl PrivacyModeImpl {
                 );
             };
 
+            log::info!("Process created successfully, PID: {}, injecting DLL: {}", proc_info.dwProcessId, dll_file.to_string_lossy());
             inject_dll(
                 proc_info.hProcess,
                 proc_info.hThread,
                 dll_file.to_string_lossy().as_ref(),
             )?;
+            log::info!("DLL injection completed successfully");
 
             if 0xffffffff == ResumeThread(proc_info.hThread) {
                 // CloseHandle
@@ -296,10 +300,13 @@ impl PrivacyModeImpl {
             self.handlers.hthread = proc_info.hThread as _;
             self.handlers.hprocess = proc_info.hProcess as _;
 
-            let hwnd = wait_find_privacy_hwnd(1_000)?;
+            log::info!("Waiting for privacy window creation, PID: {}", proc_info.dwProcessId);
+            let hwnd = wait_find_privacy_hwnd(5_000)?; // Increased timeout to 5 seconds
             if hwnd.is_null() {
+                log::error!("Failed to get hwnd after started - privacy window not created within 5 seconds");
                 bail!("Failed to get hwnd after started");
             }
+            log::info!("Privacy window created successfully, HWND: {:?}", hwnd);
         }
 
         Ok(())
@@ -366,16 +373,24 @@ unsafe fn inject_dll<'a>(hproc: HANDLE, hthread: HANDLE, dll_file: &'a str) -> R
 pub(super) fn wait_find_privacy_hwnd(msecs: u128) -> ResultType<HWND> {
     let tm_begin = Instant::now();
     let wndname = CString::new(PRIVACY_WINDOW_NAME)?;
+    let mut attempts = 0;
     loop {
+        attempts += 1;
         unsafe {
             let hwnd = FindWindowA(NULL as _, wndname.as_ptr() as _);
             if !hwnd.is_null() {
+                log::info!("Found privacy window after {} attempts in {}ms", attempts, tm_begin.elapsed().as_millis());
                 return Ok(hwnd);
             }
         }
 
         if msecs == 0 || tm_begin.elapsed().as_millis() > msecs {
+            log::warn!("Privacy window not found after {} attempts in {}ms", attempts, tm_begin.elapsed().as_millis());
             return Ok(NULL as _);
+        }
+
+        if attempts % 10 == 0 {
+            log::debug!("Still waiting for privacy window... attempt {}, elapsed: {}ms", attempts, tm_begin.elapsed().as_millis());
         }
 
         std::thread::sleep(Duration::from_millis(100));
