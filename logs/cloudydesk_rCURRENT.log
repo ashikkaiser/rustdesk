@@ -1,0 +1,918 @@
+
+[2025-09-24 05:36:50.617349 -05:00] DEBUG [src\rendezvous_mediator.rs:532] Handle intranet from 24.117.45.101:51092
+[2025-09-24 05:36:50.690190 -05:00] INFO [src\server.rs:162] Server listening on: 192.168.1.223:52773
+[2025-09-24 05:36:50.781312 -05:00] DEBUG [src\server\connection.rs:1167] #1868 Connection opened from 192.168.1.139:51092.
+[2025-09-24 05:36:50.821565 -05:00] INFO [src\privacy_mode.rs:342] Adding direct overlay mode (Mode 0): privacy_mode_impl_direct_overlay
+[2025-09-24 05:36:50.823698 -05:00] INFO [src\platform\mod.rs:112] new wakelock, require display on: true
+[2025-09-24 05:36:50.825609 -05:00] INFO [src\privacy_mode.rs:342] Adding direct overlay mode (Mode 0): privacy_mode_impl_direct_overlay
+[2025-09-24 05:36:50.826734 -05:00] INFO [src\server\connection.rs:1538] peer info supported_encoding: SupportedEncoding { h264: false, h265: false, vp8: true, av1: true, i444: MessageField(Some(CodecAbility { vp8: false, vp9: true, av1: true, h264: false, h265: false, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } })), special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } }
+[2025-09-24 05:36:50.830569 -05:00] INFO [libs\scrap\src\common\codec.rs:172] update:Update(1868, SupportedDecoding { ability_vp9: 1, ability_h264: 1, ability_h265: 1, prefer: Auto, ability_vp8: 1, ability_av1: 1, i444: MessageField(Some(CodecAbility { vp8: false, vp9: true, av1: true, h264: false, h265: false, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } })), prefer_chroma: I420, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } })
+[2025-09-24 05:36:50.830893 -05:00] INFO [libs\scrap\src\common\codec.rs:314] usable: vp8=true, av1=true, h264=false, h265=false
+[2025-09-24 05:36:50.830908 -05:00] INFO [libs\scrap\src\common\codec.rs:317] connection count: 1, used preference: Auto, encoder: VP9
+[2025-09-24 05:36:50.831058 -05:00] INFO [src\server\connection.rs:3524] Option update: OptionMessage { image_quality: Low, lock_after_session_end: NotSet, show_remote_cursor: NotSet, privacy_mode: NotSet, block_input: NotSet, custom_image_quality: 0, disable_audio: NotSet, disable_clipboard: NotSet, enable_file_transfer: Yes, supported_decoding: MessageField(Some(SupportedDecoding { ability_vp9: 1, ability_h264: 1, ability_h265: 1, prefer: Auto, ability_vp8: 1, ability_av1: 1, i444: MessageField(Some(CodecAbility { vp8: false, vp9: true, av1: true, h264: false, h265: false, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } })), prefer_chroma: I420, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } })), custom_fps: 0, disable_keyboard: NotSet, follow_remote_cursor: NotSet, follow_remote_window: NotSet, disable_camera: NotSet, terminal_persistent: NotSet, show_my_cursor: NotSet, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } }
+[2025-09-24 05:36:50.831104 -05:00] INFO [libs\scrap\src\common\codec.rs:172] update:Update(1868, SupportedDecoding { ability_vp9: 1, ability_h264: 1, ability_h265: 1, prefer: Auto, ability_vp8: 1, ability_av1: 1, i444: MessageField(Some(CodecAbility { vp8: false, vp9: true, av1: true, h264: false, h265: false, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } })), prefer_chroma: I420, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } })
+[2025-09-24 05:36:50.831176 -05:00] INFO [libs\scrap\src\common\codec.rs:314] usable: vp8=true, av1=true, h264=false, h265=false
+[2025-09-24 05:36:50.831183 -05:00] INFO [libs\scrap\src\common\codec.rs:317] connection count: 1, used preference: Auto, encoder: VP9
+[2025-09-24 05:36:50.831700 -05:00] DEBUG [src\server\connection.rs:4322] Start cm
+[2025-09-24 05:36:50.831766 -05:00] DEBUG [src\server\service.rs:305] Enter monitor0 service inner loop
+[2025-09-24 05:36:50.831830 -05:00] INFO [src\server\video_service.rs:824] new video service: monitor0
+[2025-09-24 05:36:50.833700 -05:00] DEBUG [src\server\video_service.rs:356] #displays=1, current=0, origin: (0, 0), width=1920, height=1200, cpus=6/12, name:\\.\DISPLAY1
+[2025-09-24 05:36:50.833760 -05:00] DEBUG [src\server\video_service.rs:385] Try create capturer with capturer privacy mode id 0
+[2025-09-24 05:36:50.833771 -05:00] DEBUG [src\server\video_service.rs:225] Create capturer dxgi|gdi
+[2025-09-24 05:36:50.833781 -05:00] DEBUG [src\server\portable_service.rs:924] Create capturer dxgi|gdi
+[2025-09-24 05:36:50.839245 -05:00] INFO [src\server\service.rs:196] Call snapshot of audio service
+[2025-09-24 05:36:50.840366 -05:00] INFO [src\server\service.rs:196] Call snapshot of mouse_cursor service
+[2025-09-24 05:36:50.844013 -05:00] INFO [src\server\audio_service.rs:292] Default output device: Speakers (Realtek(R) Audio)
+[2025-09-24 05:36:50.848997 -05:00] INFO [src\server\audio_service.rs:300] Default output format: SupportedStreamConfig { channels: 2, sample_rate: SampleRate(48000), buffer_size: Range { min: 0, max: 4294967295 }, sample_format: F32 }
+[2025-09-24 05:36:50.849067 -05:00] DEBUG [src\server\audio_service.rs:402] Audio sample rate : 48000
+[2025-09-24 05:36:50.852227 -05:00] DEBUG [src\server\service.rs:305] Enter display service inner loop
+[2025-09-24 05:36:50.852274 -05:00] INFO [src\server\service.rs:196] Call snapshot of display service
+[2025-09-24 05:36:50.853754 -05:00] DEBUG [src\server\service.rs:305] Enter clipboard service inner loop
+[2025-09-24 05:36:50.853900 -05:00] INFO [src\clipboard.rs:812] Subscribe clipboard listener: clipboard
+[2025-09-24 05:36:50.853921 -05:00] INFO [src\clipboard.rs:821] Start clipboard listener thread
+[2025-09-24 05:36:50.853947 -05:00] INFO [src\server\display_service.rs:243] Displays changed
+[2025-09-24 05:36:50.854897 -05:00] DEBUG [src\clipboard.rs:876] Clipboard listener started
+[2025-09-24 05:36:50.854910 -05:00] INFO [src\clipboard.rs:838] Clipboard listener thread started
+[2025-09-24 05:36:50.855038 -05:00] INFO [src\clipboard.rs:841] Clipboard listener subscribed: clipboard
+[2025-09-24 05:36:50.858742 -05:00] INFO [libs\scrap\src\common\codec.rs:135] new encoder: VPX(VpxEncoderConfig { width: 1920, height: 1200, quality: 0.5, codec: VP9, keyframe_interval: None }), i444: false
+[2025-09-24 05:36:50.859130 -05:00] INFO [libs\scrap\src\common\codec.rs:1027] cpu num: 12, cpu usage: Some(5.9641698481081695), available memory: 8G, codec thread: 4
+[2025-09-24 05:36:50.882532 -05:00] INFO [src\server\video_service.rs:551] initial quality: 0.5
+[2025-09-24 05:36:50.882604 -05:00] INFO [src\server\video_service.rs:564] gdi: false
+[2025-09-24 05:36:51.151292 -05:00] INFO [src\server\video_service.rs:728] No image, fall back to gdi
+[2025-09-24 05:36:51.208453 -05:00] INFO [src\server\service.rs:196] Call snapshot of monitor0 service
+[2025-09-24 05:36:51.303740 -05:00] INFO [src\privacy_mode.rs:245] turn_on_privacy_sync called with impl_key: 'privacy_mode_impl_direct_overlay', conn_id: 1868
+[2025-09-24 05:36:51.303815 -05:00] INFO [src\privacy_mode.rs:342] Adding direct overlay mode (Mode 0): privacy_mode_impl_direct_overlay
+[2025-09-24 05:36:51.304168 -05:00] INFO [src\privacy_mode.rs:252] Using resolved impl_key: 'privacy_mode_impl_direct_overlay'
+[2025-09-24 05:36:51.304196 -05:00] INFO [src\privacy_mode.rs:290] Already using correct impl_key: 'privacy_mode_impl_direct_overlay'
+[2025-09-24 05:36:51.304202 -05:00] INFO [src\privacy_mode.rs:294] Calling turn_on_privacy on the privacy mode instance...
+[2025-09-24 05:36:51.304223 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:850] turn_on_privacy called for connection 1868
+[2025-09-24 05:36:51.304228 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:856] Starting overlay thread...
+[2025-09-24 05:36:51.308197 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:858] Posting WM_PRIVACY_SHOW message...
+[2025-09-24 05:36:51.308320 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:863] Direct overlay privacy mode enabled for connection 1868
+[2025-09-24 05:36:51.308330 -05:00] INFO [src\privacy_mode.rs:296] turn_on_privacy result: Ok(true)
+[2025-09-24 05:36:51.308349 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:435] show_overlay called for hwnd 0x40990
+[2025-09-24 05:36:51.308397 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:441] Uncloaking overlay window
+[2025-09-24 05:36:51.308440 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:449] Setting overlay position: 1920x1200 at (0, 0)
+[2025-09-24 05:36:51.310282 -05:00] INFO [src\server\video_service.rs:1042] switch due to privacy mode changed
+[2025-09-24 05:36:51.310582 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:397] Successfully set window display affinity to 0x11 for overlay window
+[2025-09-24 05:36:51.311211 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:495] install_input_hooks called
+[2025-09-24 05:36:51.311240 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:504] Installing keyboard hook...
+[2025-09-24 05:36:51.311337 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:511] Installing mouse hook...
+[2025-09-24 05:36:51.311406 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:523] Input hooks installed successfully! Keyboard hook: 0x4b082f, Mouse hook: 0x4a052f
+[2025-09-24 05:36:51.311423 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:475] Showing overlay window
+[2025-09-24 05:36:51.312730 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:478] Overlay window shown and updated
+[2025-09-24 05:36:51.324694 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=0, y=0, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.324770 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.346822 -05:00] INFO [src\server\video_service.rs:835] stop video service: monitor0
+[2025-09-24 05:36:51.346886 -05:00] ERROR [src\server\service.rs:308] Error of monitor0 service: SWITCH
+[2025-09-24 05:36:51.437489 -05:00] DEBUG [src\server\service.rs:305] Enter monitor0 service inner loop
+[2025-09-24 05:36:51.437544 -05:00] INFO [src\server\video_service.rs:824] new video service: monitor0
+[2025-09-24 05:36:51.438429 -05:00] DEBUG [src\server\video_service.rs:356] #displays=1, current=0, origin: (0, 0), width=1920, height=1200, cpus=6/12, name:\\.\DISPLAY1
+[2025-09-24 05:36:51.438454 -05:00] DEBUG [src\server\video_service.rs:385] Try create capturer with capturer privacy mode id 1868
+[2025-09-24 05:36:51.438459 -05:00] INFO [src\server\video_service.rs:394] In privacy mode, the peer side cannot watch the screen
+[2025-09-24 05:36:51.438485 -05:00] DEBUG [src\server\video_service.rs:225] Create capturer dxgi|gdi
+[2025-09-24 05:36:51.438491 -05:00] DEBUG [src\server\portable_service.rs:924] Create capturer dxgi|gdi
+[2025-09-24 05:36:51.461471 -05:00] INFO [libs\scrap\src\common\codec.rs:135] new encoder: VPX(VpxEncoderConfig { width: 1920, height: 1200, quality: 0.5, codec: VP9, keyframe_interval: None }), i444: false
+[2025-09-24 05:36:51.481337 -05:00] INFO [src\server\video_service.rs:551] initial quality: 0.5
+[2025-09-24 05:36:51.481421 -05:00] INFO [src\server\video_service.rs:564] gdi: false
+[2025-09-24 05:36:51.750822 -05:00] INFO [src\server\video_service.rs:728] No image, fall back to gdi
+[2025-09-24 05:36:51.763576 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1058, y=206, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.763643 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.769404 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1062, y=215, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.769478 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.777049 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1064, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.777141 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.785730 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1066, y=238, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.785802 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.793529 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1069, y=247, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.793603 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.801313 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1070, y=263, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.801436 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.810502 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1072, y=277, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.810649 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.818510 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1077, y=293, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.818741 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.830224 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1083, y=312, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.830464 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.832140 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1088, y=325, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.832233 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.841118 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1095, y=339, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.841180 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.850758 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1102, y=353, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.850829 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.862543 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1108, y=362, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.862623 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.864856 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1112, y=368, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.864916 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.872458 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1119, y=378, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.872513 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.881535 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1124, y=383, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.881604 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.894146 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1126, y=384, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.894205 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.895894 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1133, y=388, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.895947 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.905488 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1135, y=388, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.905558 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.911500 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1136, y=388, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.911565 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.924503 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1138, y=388, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.924553 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.934119 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1140, y=388, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.934184 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.938077 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1141, y=388, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.938132 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.944726 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1143, y=388, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.944770 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.951964 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1145, y=386, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.952028 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.959837 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1147, y=384, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.959948 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.969584 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1150, y=381, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.969681 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:51.993428 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1163, y=367, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:51.993497 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.000652 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1172, y=353, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.000734 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.007036 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1178, y=343, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.007106 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.016173 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1182, y=331, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.016245 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.025768 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1186, y=320, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.025847 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.034811 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1190, y=306, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.034923 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.040906 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1191, y=297, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.040997 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.048302 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1194, y=290, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.048365 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.056246 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1194, y=286, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.056313 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.066043 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1194, y=282, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.066100 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.071765 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1194, y=281, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.071818 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.079746 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1194, y=280, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.079796 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.087768 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1194, y=279, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.087842 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.096265 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1194, y=278, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.096333 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.108724 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1193, y=278, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.108821 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.112888 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1193, y=277, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.112976 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.121110 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1191, y=276, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.121171 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.136790 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1190, y=275, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.136846 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.147034 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1188, y=275, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.147084 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.151783 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1187, y=274, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.151849 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.170268 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1187, y=274, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.170338 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.176751 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1187, y=274, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.176810 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.186531 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1186, y=273, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.186591 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.193613 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1185, y=272, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.193710 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.200591 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1185, y=271, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.200649 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.208934 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1185, y=271, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.208989 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.216372 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1185, y=268, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.216444 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.226294 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1184, y=267, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.226366 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.233235 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1184, y=263, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.233316 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.240585 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1182, y=259, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.240668 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.249310 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1182, y=257, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.249364 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.256648 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1182, y=256, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.256719 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.265516 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1182, y=255, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.265583 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.281473 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1182, y=255, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.281541 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.288957 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1181, y=254, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.289048 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.349488 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1181, y=254, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.349566 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.362034 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1179, y=255, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.362101 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.369316 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1178, y=257, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.369509 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.377266 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1177, y=261, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.377338 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.385337 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1176, y=266, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.385396 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.394397 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1174, y=270, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.394471 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.400616 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1173, y=272, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.400722 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.409257 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1172, y=274, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.409332 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.417278 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=279, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.417342 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.425731 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=279, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.425839 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.554221 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=278, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.554304 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.563482 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=278, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.563571 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.569453 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=277, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.569561 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.577486 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=277, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.577577 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.584658 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=276, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.584718 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.592970 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=275, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.593047 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.601223 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1171, y=274, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.601301 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.609256 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1172, y=274, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.609365 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.627582 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1173, y=273, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.627655 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.633455 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1173, y=272, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.633572 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.691050 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1174, y=272, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.691135 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.784552 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1174, y=272, flags=0x1, dwExtraInfo=0x64, wparam=513
+[2025-09-24 05:36:52.784613 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.834447 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1160, y=265, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.834570 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.840462 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1144, y=263, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.840539 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.850482 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1123, y=261, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.850552 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.856670 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1098, y=255, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.856733 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.865007 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1070, y=253, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.865074 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.873547 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1035, y=245, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.873619 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.881019 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1001, y=243, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.881086 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.889432 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=239, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.889501 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.897725 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=931, y=233, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.897768 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.905721 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=901, y=231, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.905770 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.913731 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=876, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.913802 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.919803 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=858, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.919928 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.928179 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=844, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.928245 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.937409 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=835, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.937478 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.949595 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=833, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.949807 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.952935 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=832, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.953050 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:52.960723 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=831, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:52.960795 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.362420 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=838, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.362489 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.369551 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=866, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.369603 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.376779 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=898, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.376819 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.385496 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=937, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.385561 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.393807 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=991, y=229, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.393867 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.399865 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1039, y=225, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.399977 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.408380 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1093, y=225, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.408426 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.416523 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1144, y=223, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.416582 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.424608 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1195, y=214, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.424698 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.433778 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1241, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.433833 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.441344 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1280, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.441402 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.447917 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1310, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.447972 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.456066 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1331, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.456116 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.468164 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1345, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.468235 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:53.473660 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1351, y=205, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:53.473708 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.042568 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1351, y=204, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.042697 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.084182 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1351, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.084259 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.242836 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1351, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.242927 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.249073 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1350, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.249143 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.261741 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1348, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.261827 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.273848 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1346, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.273943 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.275689 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1344, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.275747 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.280899 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1343, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.280952 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.288281 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1341, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.288324 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.296109 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1341, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.296152 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.305817 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1340, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.305899 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.311963 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1339, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.312030 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.334615 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1339, y=0, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.334682 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.466115 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1339, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.466207 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.491184 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1338, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.491261 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.515816 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1338, y=203, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.515883 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.516411 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1336, y=204, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.516484 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.518318 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1335, y=204, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.518417 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.524532 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1330, y=207, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.524622 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.538756 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1328, y=207, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.538831 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.548543 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1327, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.548605 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.561245 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1327, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.561363 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.568855 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1326, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.568925 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.578964 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1325, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.579009 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.585798 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1325, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.585903 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.594074 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1324, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.594182 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.600765 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1322, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.600831 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.608171 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1321, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.608239 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.615516 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1317, y=208, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.615688 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.630951 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1313, y=205, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.631012 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.633105 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1303, y=204, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.633170 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.640215 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1290, y=197, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.640269 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.647855 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1283, y=196, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.648052 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.655993 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1272, y=194, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.656056 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.671231 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1263, y=191, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.671285 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.673512 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1256, y=188, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.673566 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.681169 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1247, y=187, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.681218 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.688842 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1242, y=187, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.688897 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.696839 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1238, y=186, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.696898 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.704751 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1236, y=186, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.704820 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.711790 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1235, y=186, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.711852 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.719905 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1234, y=186, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.719943 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.729564 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1234, y=185, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.729643 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.834787 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1233, y=185, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.834859 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.840809 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1232, y=185, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.840885 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.848140 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1228, y=186, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.848216 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.857669 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1227, y=186, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.857756 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.865649 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1223, y=188, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.865697 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.873053 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1218, y=189, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.873120 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.882277 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1217, y=189, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.882350 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.888341 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1213, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.888431 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.897181 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1212, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.897253 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.904892 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1210, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.904946 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.912091 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1210, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.912150 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:54.921407 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1209, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:54.921489 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.089164 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1208, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.089241 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.098627 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1206, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.098690 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.107200 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1202, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.107325 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.112042 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1193, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.112105 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.120279 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1177, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.120382 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.127701 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1158, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.127823 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.136493 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1133, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.136571 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.147096 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1103, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.147177 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.152610 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1073, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.152687 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.160135 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1038, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.160199 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.168276 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1013, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.168357 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.177731 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=992, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.177775 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.188539 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=974, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.188607 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.192844 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=965, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.192888 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.200825 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:55.200912 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.370848 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=190, flags=0x1, dwExtraInfo=0x64, wparam=514
+[2025-09-24 05:36:55.370927 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:55.784188 -05:00] INFO [src\server\connection.rs:3524] Option update: OptionMessage { image_quality: NotSet, lock_after_session_end: NotSet, show_remote_cursor: NotSet, privacy_mode: NotSet, block_input: NotSet, custom_image_quality: 0, disable_audio: NotSet, disable_clipboard: NotSet, enable_file_transfer: NotSet, supported_decoding: MessageField(None), custom_fps: 30, disable_keyboard: NotSet, follow_remote_cursor: NotSet, follow_remote_window: NotSet, disable_camera: NotSet, terminal_persistent: NotSet, show_my_cursor: NotSet, special_fields: SpecialFields { unknown_fields: UnknownFields { fields: None }, cached_size: CachedSize { size: 0 } } }
+[2025-09-24 05:36:56.207242 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=971, y=199, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.207301 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.214355 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=972, y=203, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.214418 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.221480 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=972, y=201, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.221545 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.228471 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=972, y=202, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.228545 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.235627 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=973, y=204, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.235725 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.242642 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=974, y=204, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.242728 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.249530 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=976, y=207, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.249588 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.256597 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=978, y=205, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.256650 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.263633 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=977, y=206, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.263691 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.270635 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=976, y=204, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.270743 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.277636 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=979, y=208, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.277728 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.284709 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=978, y=206, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.284784 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.291934 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=978, y=205, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.292110 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.298961 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=979, y=204, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.299060 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.305914 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=979, y=202, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.306007 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.312792 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=975, y=198, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.312851 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.319841 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=972, y=199, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.319933 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.327808 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=975, y=200, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.327906 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.333925 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=971, y=198, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.333985 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.341243 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=971, y=196, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.341309 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.348395 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=971, y=195, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.348460 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.355114 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=968, y=196, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.355171 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.362087 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=967, y=193, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.362139 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.369303 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=966, y=191, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.369401 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.376130 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=966, y=193, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.376203 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.383272 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=966, y=192, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.383351 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.390248 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=965, y=192, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.390320 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.397837 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=965, y=192, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.397904 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.404273 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=191, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.404343 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.411245 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=192, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.411304 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.418335 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=192, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.418413 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.425489 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=192, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.425591 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.432423 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=192, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.432509 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.439391 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=191, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.439449 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.446242 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=193, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.446290 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.453532 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=193, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.453605 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.460631 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=193, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.460689 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.468179 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=195, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.468251 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.474677 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=961, y=194, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.474743 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.481729 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=197, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.481784 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.489247 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=196, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.489324 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.496120 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=198, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.496201 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.502885 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=962, y=196, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.502972 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.509888 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=195, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.510006 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.516982 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=193, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.517090 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.523994 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=190, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.524077 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.538045 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=190, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.538132 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.580130 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=190, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.580214 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.587095 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=190, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.587183 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.594344 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=190, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.594416 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.601262 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=190, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.601316 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.608095 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=963, y=186, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.608154 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.615374 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=962, y=178, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.615468 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.622450 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=961, y=175, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.622542 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.629603 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=958, y=170, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.629678 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.636560 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=959, y=170, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.636650 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.643734 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=959, y=157, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.643842 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.650684 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=953, y=156, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.650800 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.657807 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=958, y=151, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.657918 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.664421 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=953, y=146, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.664458 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.671711 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=958, y=144, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.671789 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.678627 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=957, y=144, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.678687 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.685766 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=953, y=137, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.685852 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.693028 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=955, y=140, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.693201 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.700063 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=952, y=143, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.700147 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.707659 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=956, y=144, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.707738 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.713849 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=957, y=147, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.713920 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.721070 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=951, y=143, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.721172 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.727805 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=955, y=140, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.727865 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.735079 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=951, y=149, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.735161 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.741983 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=945, y=142, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.742055 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.749072 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=951, y=149, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.749174 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.756179 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=947, y=151, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.756309 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.763003 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=949, y=148, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.763053 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.770169 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=952, y=159, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.770251 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.777372 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=950, y=158, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.777440 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.784256 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=951, y=164, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.784369 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.791330 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=952, y=167, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.791413 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.798974 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=950, y=170, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.799062 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.805262 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=954, y=176, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.805324 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.812492 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=959, y=179, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.812570 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.819583 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=959, y=184, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.819684 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.826758 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=960, y=184, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.826837 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.833452 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=964, y=187, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.833506 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.868601 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=972, y=199, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.868681 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:56.875011 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=975, y=197, flags=0x0, dwExtraInfo=0x0, wparam=512
+[2025-09-24 05:36:56.875080 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:684] 🚫 Blocking user mouse input - returning 1
+[2025-09-24 05:36:58.865522 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1044, y=644, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.865593 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.874595 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1044, y=633, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.874662 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.884445 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1044, y=617, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.884543 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.888621 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1044, y=596, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.888711 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.903205 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1046, y=571, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.903294 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.904615 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1046, y=548, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.904688 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.913589 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1046, y=518, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.913670 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.921725 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1046, y=483, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.921817 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.929305 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1046, y=455, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.929392 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.940747 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1046, y=430, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.940809 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.944389 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1042, y=405, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.944440 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.954461 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1036, y=379, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.954520 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.961067 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1031, y=356, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.961186 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.968730 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1023, y=331, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.968827 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.980261 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1015, y=306, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.980326 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.986549 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1009, y=282, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.986634 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:58.998412 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=1001, y=257, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:58.998467 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.000703 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=994, y=234, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.000767 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.006996 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=990, y=218, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.007089 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.018093 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=987, y=207, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.018174 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.023460 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=986, y=202, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.023548 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.031637 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=985, y=198, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.031709 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.039853 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=985, y=193, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.039923 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.048258 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=985, y=192, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.048311 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.058842 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=984, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.058930 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.063948 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=984, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.064025 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.073333 -05:00] DEBUG [src\server\audio_service.rs:477] Audio Zero Gate Attack
+[2025-09-24 05:36:59.080736 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=984, y=189, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.080821 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.088842 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=984, y=188, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.088912 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.102020 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=984, y=188, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.102095 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.112344 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=984, y=188, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.112420 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.161372 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=984, y=187, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.161426 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.210205 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=984, y=187, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.210261 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.225571 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=983, y=187, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.225666 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.242520 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=983, y=188, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.242684 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.249578 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=983, y=188, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.249896 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.257187 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=983, y=188, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.257267 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.265941 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=983, y=189, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.265996 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.281449 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=983, y=191, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.281547 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.297044 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=983, y=191, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.297105 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.307219 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=983, y=192, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.307332 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.315796 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=982, y=193, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.315871 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.321419 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=982, y=193, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.321480 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.337424 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=982, y=194, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.337494 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.555234 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=982, y=193, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.555318 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.634603 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=982, y=193, flags=0x1, dwExtraInfo=0x64, wparam=513
+[2025-09-24 05:36:59.634701 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.703054 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=982, y=193, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.703136 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.706019 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=975, y=190, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.706068 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.714335 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=962, y=187, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.714405 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.722246 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=946, y=185, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.722305 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.729425 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=927, y=183, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.729474 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.742162 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=906, y=181, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.742242 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.748188 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=886, y=177, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.748242 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.754684 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=863, y=174, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.754755 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.762790 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=840, y=172, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.762844 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.769704 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=819, y=166, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.769801 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.780957 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=798, y=164, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.781019 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.786419 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=782, y=162, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.786571 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.792947 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=766, y=159, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.793002 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.800961 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=755, y=157, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.801025 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.808345 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=743, y=154, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.808404 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.816999 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=734, y=152, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.817045 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.823652 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=730, y=150, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.823719 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.832076 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=723, y=149, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.832155 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.839861 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=716, y=148, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.839927 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.848559 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=710, y=145, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.848621 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.856375 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=703, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.856432 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.864382 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=694, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.864424 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.872280 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=685, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.872334 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.879856 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=676, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.879906 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.888665 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=662, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.888732 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.896757 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=651, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.896808 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.905470 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=635, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.905527 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.912772 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=621, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.912829 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.920904 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=607, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.920978 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.928421 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=593, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.928503 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.936562 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=582, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.936625 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.944529 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=568, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.944581 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.955932 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=555, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.955997 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.960637 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=541, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.960704 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.967936 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=532, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.968005 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.976228 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=520, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.976280 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.984611 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=518, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.984716 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:36:59.992963 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=517, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:36:59.993016 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.000799 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=517, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.000855 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.061705 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=521, y=143, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.061806 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.065172 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=540, y=142, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.065230 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.071957 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=565, y=142, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.071999 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.079897 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=600, y=140, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.079962 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.087989 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=644, y=133, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.088047 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.097277 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=688, y=129, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.097339 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.104499 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=739, y=125, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.104554 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.113237 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=785, y=121, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.113315 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.123152 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=829, y=121, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.123202 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.129495 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=875, y=114, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.129584 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.139271 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=910, y=112, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.139335 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.145141 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=931, y=110, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.145201 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.154951 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=951, y=109, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.155035 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.160149 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=960, y=109, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.160201 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.168588 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=961, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.168681 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.176417 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=961, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.176505 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.218941 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=957, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.219021 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.226163 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=941, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.226226 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.234068 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=922, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.234149 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.240557 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=902, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.240619 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.248718 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=876, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.248774 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.257262 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=853, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.257338 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.264435 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=835, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.264473 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.273595 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=819, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.273663 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.280540 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=803, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.280606 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.289021 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=794, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.289076 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.300016 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=789, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.300088 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.369190 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=796, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.369315 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.376876 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=805, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.376926 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.385175 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=819, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.385246 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.394546 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=830, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.394584 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.400436 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=846, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.400501 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.407716 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=858, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.407770 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.415931 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=871, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.415982 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.425039 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=871, y=108, flags=0x1, dwExtraInfo=0x64, wparam=514
+[2025-09-24 05:37:00.425090 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.426647 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=876, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.426760 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.433932 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=876, y=107, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.434008 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.464347 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=877, y=108, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.464403 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.474853 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=858, y=113, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.474935 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.480665 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=831, y=121, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.480723 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.488722 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=791, y=129, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.488788 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.496486 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=738, y=138, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.496551 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.504960 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=670, y=145, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.508031 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.512353 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=591, y=164, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.512435 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.520294 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=483, y=179, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.520389 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.528438 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=341, y=196, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.528500 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.536310 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=193, y=217, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.536387 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.550701 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=29, y=239, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.550787 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:00.554681 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:666] 🔴 Mouse hook: x=0, y=270, flags=0x1, dwExtraInfo=0x64, wparam=512
+[2025-09-24 05:37:00.554758 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:671] ✅ Allowing ENIGO mouse input to pass through
+[2025-09-24 05:37:08.477771 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:604] 🔵 Keyboard hook: vkCode=163, flags=0x11, dwExtraInfo=0x64, wparam=256
+[2025-09-24 05:37:08.477846 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:609] ✅ Allowing ENIGO keyboard input to pass through
+[2025-09-24 05:37:08.544968 -05:00] DEBUG [src\privacy_mode\win_direct_overlay.rs:604] 🔵 Keyboard hook: vkCode=163, flags=0x91, dwExtraInfo=0x64, wparam=257
+[2025-09-24 05:37:08.545049 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:609] ✅ Allowing ENIGO keyboard input to pass through
+[2025-09-24 05:37:09.152019 -05:00] INFO [src\server\connection.rs:2004] receive close reason: 
+[2025-09-24 05:37:09.152215 -05:00] INFO [src\server\connection.rs:3897] #1868 Connection closed: Peer close
+[2025-09-24 05:37:09.152411 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:889] Direct overlay privacy mode disabled for connection 1868
+[2025-09-24 05:37:09.152478 -05:00] INFO [src\server\connection.rs:944] #1868 connection loop exited
+[2025-09-24 05:37:09.152670 -05:00] INFO [libs\scrap\src\common\codec.rs:172] update:Remove(1868)
+[2025-09-24 05:37:09.152693 -05:00] DEBUG [src\server\connection.rs:1049] Input thread exited
+[2025-09-24 05:37:09.152986 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:889] Direct overlay privacy mode disabled for connection 0
+[2025-09-24 05:37:09.155572 -05:00] WARN [src\server\connection.rs:1980] ipc to connection manager exit: expected
+[2025-09-24 05:37:09.155640 -05:00] DEBUG [src\server\connection.rs:1056] post_seq_loop exited
+[2025-09-24 05:37:09.155808 -05:00] INFO [src\privacy_mode\win_direct_overlay.rs:397] Successfully set window display affinity to 0x0 for overlay window
+[2025-09-24 05:37:09.155870 -05:00] INFO [src\server\connection.rs:4534] drop wakelock
+[2025-09-24 05:37:09.156286 -05:00] DEBUG [src\server\connection.rs:1987] SendError { .. }, libcloudydesk::server::connection:src\server\connection.rs:1987:25
+[2025-09-24 05:37:09.160599 -05:00] INFO [src\server\video_service.rs:1042] switch due to privacy mode changed
+[2025-09-24 05:37:09.193357 -05:00] INFO [src\server\video_service.rs:835] stop video service: monitor0
+[2025-09-24 05:37:09.193414 -05:00] ERROR [src\server\service.rs:308] Error of monitor0 service: SWITCH
+[2025-09-24 05:37:09.201168 -05:00] INFO [src\clipboard.rs:846] Unsubscribe clipboard listener: clipboard
+[2025-09-24 05:37:09.201258 -05:00] INFO [src\clipboard.rs:857] Stop clipboard listener thread
+[2025-09-24 05:37:09.201400 -05:00] DEBUG [src\clipboard.rs:880] Clipboard listener stopped
+[2025-09-24 05:37:09.203073 -05:00] INFO [src\clipboard.rs:860] Clipboard listener thread stopped
+[2025-09-24 05:37:09.203181 -05:00] INFO [src\clipboard.rs:863] Clipboard listener unsubscribed: clipboard
+[2025-09-24 05:37:09.203242 -05:00] DEBUG [src\server\service.rs:321] Exit clipboard service inner loop
+[2025-09-24 05:37:09.271515 -05:00] DEBUG [src\server\service.rs:321] Exit display service inner loop

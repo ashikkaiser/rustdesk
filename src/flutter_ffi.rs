@@ -304,6 +304,15 @@ pub fn session_close(session_id: SessionID) {
         // But we still call it to make the code more stable.
         #[cfg(any(target_os = "android", target_os = "ios"))]
         crate::keyboard::release_remote_keys("map");
+        
+        // Ensure privacy mode is fully cleaned up when session closes
+        #[cfg(windows)]
+        {
+            if let Err(e) = crate::privacy_mode::win_direct_overlay::cleanup_on_session_close() {
+                log::warn!("Failed to cleanup privacy mode on session close: {}", e);
+            }
+        }
+        
         session.close_event_stream(session_id);
         session.close();
     }
@@ -348,6 +357,14 @@ pub fn session_get_is_recording(session_id: SessionID) -> SyncReturn<bool> {
 }
 
 pub fn session_reconnect(session_id: SessionID, force_relay: bool) {
+    // Cleanup privacy mode before reconnecting to prevent stuck overlays
+    #[cfg(windows)]
+    {
+        if let Err(e) = crate::privacy_mode::win_direct_overlay::cleanup_on_session_close() {
+            log::warn!("Failed to cleanup privacy mode on session reconnect: {}", e);
+        }
+    }
+    
     if let Some(session) = sessions::get_session_by_session_id(&session_id) {
         session.reconnect(force_relay);
     }
