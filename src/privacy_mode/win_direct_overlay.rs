@@ -18,20 +18,20 @@ use winapi::{
     ctypes::c_void as WinCvoid,
     shared::{
     minwindef::{ATOM, BOOL, DWORD, HINSTANCE, LPARAM, LRESULT, UINT, WPARAM, LOBYTE},
-        windef::{HHOOK, HMENU, HWND, POINT, RECT},
+        windef::{HBITMAP, HCURSOR, HHOOK, HMENU, HWND, POINT, RECT},
     },
     um::{
         dwmapi::DwmSetWindowAttribute,
         errhandlingapi::GetLastError,
         libloaderapi::{FreeLibrary, GetModuleHandleW, GetProcAddress, LoadLibraryW},
         processthreadsapi::GetCurrentThreadId,
-        wingdi::{CreateSolidBrush, DeleteObject, RGB},
+        wingdi::{CreateBitmap, CreateSolidBrush, DeleteObject, RGB},
         winuser::{
-            BeginPaint, CallNextHookEx, ClientToScreen, CreateWindowExW, DefWindowProcW, DestroyWindow,
+            BeginPaint, CallNextHookEx, ClientToScreen, CreateIconIndirect, CreateWindowExW, DefWindowProcW, DestroyWindow,
             DispatchMessageW, EndPaint, FillRect, GetClientRect, GetCursorPos, GetForegroundWindow,
             GetMessageW, GetSystemMetrics, GetWindowLongPtrW, GetWindowLongW, PostMessageW, PostQuitMessage, 
             PostThreadMessageW, RegisterClassExW, ScreenToClient, SetCursor, SetCursorPos, 
-            SetLayeredWindowAttributes, SetWindowDisplayAffinity, SetWindowLongPtrW, SetWindowLongW, SetWindowPos, 
+            SetLayeredWindowAttributes, SetSystemCursor, SetWindowDisplayAffinity, SetWindowLongPtrW, SetWindowLongW, SetWindowPos, 
             SetWindowsHookExW, ShowCursor, ShowWindow, TranslateMessage, UnhookWindowsHookEx, 
             UpdateWindow, WindowFromPoint, CS_HREDRAW, CS_VREDRAW, GWL_EXSTYLE, HC_ACTION, 
             HWND_TOPMOST, IDC_ARROW, LWA_ALPHA, MSG, PAINTSTRUCT, SM_CXVIRTUALSCREEN, 
@@ -42,7 +42,8 @@ use winapi::{
             WM_RBUTTONUP, WM_SETCURSOR, WM_SYSKEYDOWN, WM_SYSKEYUP, WM_WINDOWPOSCHANGING, 
             WNDCLASSEXW, WINDOWPOS, WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW, 
             WS_EX_TOPMOST, WS_EX_TRANSPARENT, WS_POPUP, WH_KEYBOARD_LL, WH_MOUSE_LL, 
-            KBDLLHOOKSTRUCT, MSLLHOOKSTRUCT, GetKeyState, VK_CONTROL,
+            KBDLLHOOKSTRUCT, MSLLHOOKSTRUCT, GetKeyState, ICONINFO, SPI_SETCURSORS, SystemParametersInfoW,
+            VK_CONTROL, WM_NCHITTEST, HTTRANSPARENT,
         },
     },
 };
@@ -57,6 +58,24 @@ const WDA_EXCLUDEFROMCAPTURE: u32 = 0x0000_0011;
 const ZBID_ABOVELOCK_UX: u32 = 18;
 const DWMWA_CLOAK: u32 = 13;
 
+// Define OCR_* constants (IDs for system cursors) as they may not be exposed in our winapi version
+const OCR_NORMAL: u32 = 32512;      // Arrow
+const OCR_IBEAM: u32 = 32513;       // Text I-beam
+const OCR_WAIT: u32 = 32514;        // Hourglass
+const OCR_CROSS: u32 = 32515;       // Crosshair
+const OCR_UP: u32 = 32516;          // Up arrow
+const OCR_SIZE: u32 = 32640;        // Obsolete size (unused)
+const OCR_ICON: u32 = 32641;        // Obsolete icon (unused)
+const OCR_SIZENWSE: u32 = 32642;    // NW/SE resize
+const OCR_SIZENESW: u32 = 32643;    // NE/SW resize
+const OCR_SIZEWE: u32 = 32644;      // W/E resize
+const OCR_SIZENS: u32 = 32645;      // N/S resize
+const OCR_SIZEALL: u32 = 32646;     // Move
+const OCR_NO: u32 = 32648;          // No/Unavailable
+const OCR_HAND: u32 = 32649;        // Hand (link)
+const OCR_APPSTARTING: u32 = 32650; // App starting (unused)
+const OCR_HELP: u32 = 32651;        // Help
+
 const WM_PRIVACY_SHOW: UINT = WM_APP + 0x101;
 const WM_PRIVACY_HIDE: UINT = WM_APP + 0x102;
 const WM_PRIVACY_SHUTDOWN: UINT = WM_APP + 0x103;
@@ -65,6 +84,7 @@ static PRIVACY_ACTIVE: AtomicBool = AtomicBool::new(false);
 static CURSOR_HIDDEN: AtomicBool = AtomicBool::new(false);
 static CURSOR_ENFORCER_RUNNING: AtomicBool = AtomicBool::new(false);
 static HOOKS_INSTALLED: AtomicBool = AtomicBool::new(false);
+static CURSOR_SYSTEM_REPLACED: AtomicBool = AtomicBool::new(false);
 static OVERLAY_CONTROLLER: Mutex<Option<Arc<OverlayController>>> = Mutex::new(None);
 
 static mut KEYBOARD_HOOK: HHOOK = ptr::null_mut();
@@ -295,7 +315,7 @@ unsafe fn create_overlay_window(
     let vh = GetSystemMetrics(SM_CYVIRTUALSCREEN);
     
     let hwnd = CreateWindowExW(
-        WS_EX_TOPMOST | WS_EX_NOACTIVATE,
+        WS_EX_TOPMOST | WS_EX_NOACTIVATE | WS_EX_TRANSPARENT,
         class_name,
         window_title,
         WS_POPUP,
@@ -433,7 +453,7 @@ unsafe fn configure_overlay_window(hwnd: HWND) {
     // Start without transparency to make sure window is visible when shown
     let current_style = GetWindowLongW(hwnd, GWL_EXSTYLE);
     let new_style = current_style
-        | (WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_NOACTIVATE) as i32;
+        | (WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_NOACTIVATE | WS_EX_TRANSPARENT) as i32;
     SetWindowLongW(hwnd, GWL_EXSTYLE, new_style);
 
     // Set fully opaque 
@@ -468,6 +488,7 @@ unsafe fn show_overlay(hwnd: HWND) {
     set_capture_exclusion(hwnd, true);
 
     hide_cursor_aggressive();
+    apply_system_blank_cursors();
     start_cursor_enforcer();
 
     if let Err(err) = install_input_hooks() {
@@ -490,6 +511,7 @@ unsafe fn hide_overlay(hwnd: HWND) {
     set_capture_exclusion(hwnd, false);
 
     remove_input_hooks();
+    restore_system_cursors();
     show_cursor_restore();
 }
 
@@ -592,6 +614,70 @@ fn start_cursor_enforcer() {
         }
         CURSOR_ENFORCER_RUNNING.store(false, Ordering::SeqCst);
     });
+}
+
+// Create a fully transparent cursor
+unsafe fn create_invisible_cursor() -> Option<HCURSOR> {
+    // 1x1 transparent bitmaps
+    let hbm_mask: HBITMAP = CreateBitmap(1, 1, 1, 1, ptr::null());
+    let hbm_color: HBITMAP = CreateBitmap(1, 1, 1, 32, ptr::null());
+    if hbm_mask.is_null() || hbm_color.is_null() {
+        if !hbm_mask.is_null() { DeleteObject(hbm_mask as _); }
+        if !hbm_color.is_null() { DeleteObject(hbm_color as _); }
+        log::warn!("Failed to create bitmaps for invisible cursor");
+        return None;
+    }
+
+    let mut ii: ICONINFO = mem::zeroed();
+    ii.fIcon = 0; // cursor, not icon
+    ii.xHotspot = 0;
+    ii.yHotspot = 0;
+    ii.hbmMask = hbm_mask;
+    ii.hbmColor = hbm_color;
+    let hcursor = CreateIconIndirect(&mut ii);
+
+    // We can delete the bitmaps after creating the cursor
+    DeleteObject(hbm_mask as _);
+    DeleteObject(hbm_color as _);
+
+    if hcursor.is_null() {
+        log::warn!("CreateIconIndirect failed for invisible cursor");
+        None
+    } else {
+        Some(hcursor)
+    }
+}
+
+unsafe fn apply_system_blank_cursors() {
+    if CURSOR_SYSTEM_REPLACED.swap(true, Ordering::SeqCst) {
+        return;
+    }
+
+    let cursor_ids = [
+        OCR_NORMAL, OCR_IBEAM, OCR_CROSS, OCR_HAND, OCR_HELP, OCR_NO, OCR_SIZEALL,
+        OCR_SIZENESW, OCR_SIZENS, OCR_SIZENWSE, OCR_SIZEWE, OCR_UP, OCR_WAIT,
+    ];
+
+    for id in cursor_ids.iter() {
+        if let Some(cur) = create_invisible_cursor() {
+            let ok = SetSystemCursor(cur, *id);
+            if ok == 0 {
+                log::warn!("SetSystemCursor failed for id {}: {}", id, GetLastError());
+            }
+            // SetSystemCursor takes ownership of HCURSOR, no need to destroy here
+        }
+    }
+}
+
+unsafe fn restore_system_cursors() {
+    if !CURSOR_SYSTEM_REPLACED.swap(false, Ordering::SeqCst) {
+        return;
+    }
+    // Reload default system cursors
+    let ok = SystemParametersInfoW(SPI_SETCURSORS, 0, ptr::null_mut(), 0);
+    if ok == 0 {
+        log::warn!("SystemParametersInfoW(SPI_SETCURSORS) failed: {}", GetLastError());
+    }
 }
 
 unsafe extern "system" fn keyboard_hook_proc(
@@ -776,6 +862,10 @@ unsafe extern "system" fn window_proc(
             SetCursor(ptr::null_mut());
             1
         }
+        // Make the overlay window hit-test transparent so mouse events pass to underlying apps
+        WM_NCHITTEST => {
+            HTTRANSPARENT as LRESULT
+        }
         WM_WINDOWPOSCHANGING => {
             let window_pos = lparam as *mut WINDOWPOS;
             if !window_pos.is_null() {
@@ -830,6 +920,7 @@ pub fn cleanup_on_session_close() -> ResultType<()> {
 
     unsafe {
         remove_input_hooks();
+        restore_system_cursors();
         show_cursor_restore();
     }
 
