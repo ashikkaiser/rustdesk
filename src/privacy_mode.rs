@@ -7,7 +7,7 @@ use crate::{
 };
 #[cfg(windows)]
 use hbb_common::tokio;
-use hbb_common::{anyhow::anyhow, bail, lazy_static, tokio::sync::oneshot, ResultType};
+use hbb_common::{anyhow::anyhow, bail, lazy_static, log, tokio::sync::oneshot, ResultType};
 use serde_derive::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -22,6 +22,8 @@ mod win_input;
 pub mod win_mag;
 #[cfg(windows)]
 pub mod win_topmost_window;
+#[cfg(windows)]
+pub mod win_direct_overlay;
 
 #[cfg(windows)]
 mod win_virtual_display;
@@ -38,6 +40,7 @@ pub const PRIVACY_MODE_IMPL_WIN_MAG: &str = "privacy_mode_impl_mag";
 pub const PRIVACY_MODE_IMPL_WIN_EXCLUDE_FROM_CAPTURE: &str =
     "privacy_mode_impl_exclude_from_capture";
 pub const PRIVACY_MODE_IMPL_WIN_VIRTUAL_DISPLAY: &str = "privacy_mode_impl_virtual_display";
+pub const PRIVACY_MODE_IMPL_WIN_DIRECT_OVERLAY: &str = "privacy_mode_impl_direct_overlay";
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(tag = "t", content = "c")]
@@ -89,7 +92,10 @@ lazy_static::lazy_static! {
     pub static ref DEFAULT_PRIVACY_MODE_IMPL: String = {
         #[cfg(windows)]
         {
-            if win_exclude_from_capture::is_supported() {
+            // Prefer the new direct overlay mode (Mode 0) as it's most reliable
+            if win_direct_overlay::is_supported() {
+                PRIVACY_MODE_IMPL_WIN_DIRECT_OVERLAY
+            } else if win_exclude_from_capture::is_supported() {
                 PRIVACY_MODE_IMPL_WIN_EXCLUDE_FROM_CAPTURE
             } else {
                 if display_service::is_privacy_mode_mag_supported() {
@@ -132,6 +138,13 @@ lazy_static::lazy_static! {
         let mut map: HashMap<&'static str, PrivacyModeCreator> = HashMap::new();
         #[cfg(windows)]
         {
+            // Add the new direct overlay mode (Mode 0)
+            if win_direct_overlay::is_supported() {
+                map.insert(win_direct_overlay::PRIVACY_MODE_IMPL, |impl_key: &str| {
+                    Box::new(win_direct_overlay::DirectOverlayPrivacyMode::new(impl_key))
+                });
+            }
+
             if win_exclude_from_capture::is_supported() {
                 map.insert(win_exclude_from_capture::PRIVACY_MODE_IMPL, |impl_key: &str| {
                     Box::new(win_exclude_from_capture::PrivacyModeImpl::new(impl_key))
@@ -229,11 +242,14 @@ async fn turn_on_privacy_async(impl_key: String, conn_id: i32) -> Option<ResultT
 }
 
 fn turn_on_privacy_sync(impl_key: &str, conn_id: i32) -> Option<ResultType<bool>> {
+    log::info!("turn_on_privacy_sync called with impl_key: '{}', conn_id: {}", impl_key, conn_id);
+    
     // Check if privacy mode is already on or occupied by another one
     let mut privacy_mode_lock = PRIVACY_MODE.lock().unwrap();
 
     // Check or switch privacy mode implementation
     let impl_key = get_supported_impl(impl_key);
+    log::info!("Using resolved impl_key: '{}'", impl_key);
 
     let mut cur_impl_key = "".to_string();
     if let Some(privacy_mode) = privacy_mode_lock.as_ref() {
@@ -254,6 +270,7 @@ fn turn_on_privacy_sync(impl_key: &str, conn_id: i32) -> Option<ResultType<bool>
     }
 
     if cur_impl_key != impl_key {
+        log::info!("Switching from '{}' to '{}'", cur_impl_key, impl_key);
         if let Some(creator) = PRIVACY_MODE_CREATOR
             .lock()
             .unwrap()
@@ -264,13 +281,20 @@ fn turn_on_privacy_sync(impl_key: &str, conn_id: i32) -> Option<ResultType<bool>
             }
 
             *privacy_mode_lock = Some(creator(&impl_key));
+            log::info!("Successfully created privacy mode instance for '{}'", impl_key);
         } else {
+            log::error!("Unsupported privacy mode: {}", impl_key);
             return Some(Err(anyhow!("Unsupported privacy mode: {}", impl_key)));
         }
+    } else {
+        log::info!("Already using correct impl_key: '{}'", impl_key);
     }
 
     // turn on privacy mode
-    Some(privacy_mode_lock.as_mut()?.turn_on_privacy(conn_id))
+    log::info!("Calling turn_on_privacy on the privacy mode instance...");
+    let result = privacy_mode_lock.as_mut()?.turn_on_privacy(conn_id);
+    log::info!("turn_on_privacy result: {:?}", result);
+    Some(result)
 }
 
 #[inline]
@@ -312,6 +336,17 @@ pub fn get_supported_privacy_mode_impl() -> Vec<(&'static str, &'static str)> {
     #[cfg(target_os = "windows")]
     {
         let mut vec_impls = Vec::new();
+
+        // Add the new direct overlay mode (Mode 0) as the first option
+        if win_direct_overlay::is_supported() {
+            log::info!("Adding direct overlay mode (Mode 0): {}", PRIVACY_MODE_IMPL_WIN_DIRECT_OVERLAY);
+            vec_impls.push((
+                PRIVACY_MODE_IMPL_WIN_DIRECT_OVERLAY,
+                "privacy_mode_impl_direct_overlay_tip",
+            ));
+        } else {
+            log::warn!("Direct overlay mode not supported");
+        }
 
         if win_exclude_from_capture::is_supported() {
             vec_impls.push((
