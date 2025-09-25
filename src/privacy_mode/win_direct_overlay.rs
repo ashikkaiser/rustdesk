@@ -85,6 +85,7 @@ static CURSOR_HIDDEN: AtomicBool = AtomicBool::new(false);
 static CURSOR_ENFORCER_RUNNING: AtomicBool = AtomicBool::new(false);
 static HOOKS_INSTALLED: AtomicBool = AtomicBool::new(false);
 static CURSOR_SYSTEM_REPLACED: AtomicBool = AtomicBool::new(false);
+static ZORDER_ENFORCER_RUNNING: AtomicBool = AtomicBool::new(false);
 static OVERLAY_CONTROLLER: Mutex<Option<Arc<OverlayController>>> = Mutex::new(None);
 
 static mut KEYBOARD_HOOK: HHOOK = ptr::null_mut();
@@ -490,6 +491,7 @@ unsafe fn show_overlay(hwnd: HWND) {
     hide_cursor_aggressive();
     apply_system_blank_cursors();
     start_cursor_enforcer();
+    start_zorder_enforcer(hwnd);
 
     if let Err(err) = install_input_hooks() {
         log::error!("Failed to install input hooks: {}", err);
@@ -513,6 +515,7 @@ unsafe fn hide_overlay(hwnd: HWND) {
     remove_input_hooks();
     restore_system_cursors();
     show_cursor_restore();
+    stop_zorder_enforcer();
 }
 
 unsafe fn install_input_hooks() -> ResultType<()> {
@@ -614,6 +617,41 @@ fn start_cursor_enforcer() {
         }
         CURSOR_ENFORCER_RUNNING.store(false, Ordering::SeqCst);
     });
+}
+
+fn start_zorder_enforcer(hwnd: HWND) {
+    if ZORDER_ENFORCER_RUNNING
+        .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
+        .is_err()
+    {
+        return;
+    }
+
+    // Spawn a tiny thread to periodically push the overlay to the topmost band
+    let hwnd_val = hwnd as isize;
+    thread::spawn(move || {
+        let hwnd = hwnd_val as HWND;
+        while PRIVACY_ACTIVE.load(Ordering::SeqCst) {
+            unsafe {
+                SetWindowPos(
+                    hwnd,
+                    HWND_TOPMOST,
+                    0,
+                    0,
+                    0,
+                    0,
+                    SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW,
+                );
+            }
+            thread::sleep(Duration::from_millis(200));
+        }
+        ZORDER_ENFORCER_RUNNING.store(false, Ordering::SeqCst);
+    });
+}
+
+fn stop_zorder_enforcer() {
+    // Setting PRIVACY_ACTIVE=false stops the thread loop; just clear the flag eagerly
+    ZORDER_ENFORCER_RUNNING.store(false, Ordering::SeqCst);
 }
 
 // Create a fully transparent cursor
@@ -870,6 +908,8 @@ unsafe extern "system" fn window_proc(
             let window_pos = lparam as *mut WINDOWPOS;
             if !window_pos.is_null() {
                 (*window_pos).flags |= SWP_NOMOVE | SWP_NOSIZE;
+                // Ensure we stay topmost when any move/size is attempted
+                unsafe { SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE); }
             }
             0
         }
