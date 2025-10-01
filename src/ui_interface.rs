@@ -101,7 +101,7 @@ pub fn install_me(_options: String, _path: String, _silent: bool, _debug: bool) 
     #[cfg(windows)]
     std::thread::spawn(move || {
         allow_err!(crate::platform::windows::install_me(
-            &_options, _path, _silent, _debug
+            &_options, _path, _silent, _debug, None
         ));
         std::process::exit(0);
     });

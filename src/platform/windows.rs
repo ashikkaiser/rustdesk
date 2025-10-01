@@ -1348,7 +1348,7 @@ fn get_after_install(
     ", create_service=get_create_service(&exe))
 }
 
-pub fn install_me(options: &str, path: String, silent: bool, debug: bool) -> ResultType<()> {
+pub fn install_me(options: &str, path: String, silent: bool, debug: bool, agent_id: Option<&str>) -> ResultType<()> {
     let uninstall_str = get_uninstall(false, false);
     let mut path = path.trim_end_matches('\\').to_owned();
     let (subkey, _path, start_menu, exe) = get_default_install_info();
@@ -1374,6 +1374,14 @@ pub fn install_me(options: &str, path: String, silent: bool, debug: bool) -> Res
     let app_name = crate::get_app_name();
 
     let tmp_path = std::env::temp_dir().to_string_lossy().to_string();
+    
+    // Build shortcut arguments - include --agent parameter if agent_id is provided
+    let shortcut_args = if let Some(agent_id) = agent_id {
+        format!("    oLink.Arguments = \"--agent {}\"\n", agent_id)
+    } else {
+        String::new()
+    };
+    
     let mk_shortcut = write_cmds(
         format!(
             "
@@ -1382,7 +1390,7 @@ sLinkFile = \"{tmp_path}\\{app_name}.lnk\"
 
 Set oLink = oWS.CreateShortcut(sLinkFile)
     oLink.TargetPath = \"{exe}\"
-oLink.Save
+{shortcut_args}oLink.Save
         "
         ),
         "vbs",
@@ -1410,7 +1418,7 @@ oLink.Save
     .to_str()
     .unwrap_or("")
     .to_owned();
-    let tray_shortcut = get_tray_shortcut(&exe, &tmp_path)?;
+    let tray_shortcut = get_tray_shortcut(&exe, &tmp_path, agent_id)?;
     let mut reg_value_desktop_shortcuts = "0".to_owned();
     let mut reg_value_start_menu_shortcuts = "0".to_owned();
     let mut reg_value_printer = "0".to_owned();
@@ -2647,7 +2655,7 @@ pub fn install_service() -> bool {
     let _installing = crate::platform::InstallingService::new();
     let (_, _, _, exe) = get_install_info();
     let tmp_path = std::env::temp_dir().to_string_lossy().to_string();
-    let tray_shortcut = get_tray_shortcut(&exe, &tmp_path).unwrap_or_default();
+    let tray_shortcut = get_tray_shortcut(&exe, &tmp_path, None).unwrap_or_default();
     let filter = format!(" /FI \"PID ne {}\"", get_current_pid());
     Config::set_option("stop-service".into(), "".into());
     crate::ipc::EXIT_RECV_CLOSE.store(false, Ordering::Relaxed);
@@ -2855,7 +2863,14 @@ pub fn update_me_msi(msi: &str, quiet: bool) -> ResultType<()> {
     Ok(())
 }
 
-pub fn get_tray_shortcut(exe: &str, tmp_path: &str) -> ResultType<String> {
+pub fn get_tray_shortcut(exe: &str, tmp_path: &str, agent_id: Option<&str>) -> ResultType<String> {
+    // Build tray shortcut arguments - include --agent parameter if agent_id is provided, along with --tray
+    let tray_args = if let Some(agent_id) = agent_id {
+        format!("    oLink.Arguments = \"--agent {} --tray\"", agent_id)
+    } else {
+        "    oLink.Arguments = \"--tray\"".to_string()
+    };
+    
     Ok(write_cmds(
         format!(
             "
@@ -2864,7 +2879,7 @@ sLinkFile = \"{tmp_path}\\{app_name} Tray.lnk\"
 
 Set oLink = oWS.CreateShortcut(sLinkFile)
     oLink.TargetPath = \"{exe}\"
-    oLink.Arguments = \"--tray\"
+{tray_args}
 oLink.Save
         ",
             app_name = crate::get_app_name(),

