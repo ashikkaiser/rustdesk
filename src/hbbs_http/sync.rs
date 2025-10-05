@@ -183,8 +183,11 @@ async fn start_hbbs_sync_async() {
                             }
                         }
                     }
-                    match crate::post_request(url.replace("heartbeat", "sysinfo"), v, "").await {
+                    let sysinfo_url = url.replace("heartbeat", "sysinfo");
+                    log::info!("Sending sysinfo to API: {} with device_id: {}", sysinfo_url, id);
+                    match crate::post_request(sysinfo_url, v, "").await {
                         Ok(x)  => {
+                            log::info!("Sysinfo response received from API: {}", x);
                             if x == "SYSINFO_UPDATED" {
                                 info_uploaded = InfoUploaded::uploaded(url.clone(), id.clone(), sys_username);
                                 log::info!("sysinfo updated");
@@ -194,12 +197,15 @@ async fn start_hbbs_sync_async() {
                                 }
                                 *PRO.lock().unwrap() = true;
                             } else if x == "ID_NOT_FOUND" {
+                                log::warn!("Device ID not found on server, will retry sysinfo upload");
                                 info_uploaded.last_uploaded = None; // next heartbeat will upload sysinfo again
                             } else {
+                                log::info!("Sysinfo upload scheduled for retry later");
                                 info_uploaded.last_uploaded = Some(Instant::now());
                             }
                         }
-                        _ => {
+                        Err(e) => {
+                            log::error!("Sysinfo request to API failed: {}", e);
                             info_uploaded.last_uploaded = Some(Instant::now());
                         }
                     }
@@ -217,7 +223,9 @@ async fn start_hbbs_sync_async() {
                 }
                 let modified_at = LocalConfig::get_option("strategy_timestamp").parse::<i64>().unwrap_or(0);
                 v["modified_at"] = json!(modified_at);
+                log::info!("Sending heartbeat to API: {} with device_id: {} and {} active connections", url, id, conns.len());
                 if let Ok(s) = crate::post_request(url.clone(), v.to_string(), "").await {
+                    log::info!("Heartbeat response received from API");
                     if let Ok(mut rsp) = serde_json::from_str::<HashMap::<&str, Value>>(&s) {
                         if rsp.remove("sysinfo").is_some() {
                             info_uploaded.uploaded = false;
@@ -243,6 +251,8 @@ async fn start_hbbs_sync_async() {
                             }
                         }
                     }
+                } else {
+                    log::warn!("Heartbeat request to API failed or timed out: {}", url);
                 }
             }
         }

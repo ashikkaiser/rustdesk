@@ -49,7 +49,6 @@ def create_self_extracting_agent_installer(agent_id):
     print(f"📄 Creating agent config: {config_file}")
     config_content = f"""[Agent]
 AgentID={agent_id}
-RegistrationURL=https://webhook.site/b59b65e2-8e58-486f-87f5-95ad48bd07de
 
 [Installation]
 AutoRegister=true

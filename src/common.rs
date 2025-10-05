@@ -117,10 +117,15 @@ pub fn global_init() -> bool {
     hbb_common::config::Config::set_option("custom-rendezvous-server".to_string(), "51.81.209.99:21116".to_string());
     hbb_common::config::Config::set_option("relay-server".to_string(), "51.81.209.99:21117".to_string());
     hbb_common::config::Config::set_option("key".to_string(), "RIUIXVGow6gLsgXst710AOIf7KV+PcQhbC1l227GLSI=".to_string());
-    hbb_common::config::Config::set_option("api-server".to_string(), "https://webhook.site/93e4bf23-c33b-415a-97c5-c44e6d8184cc".to_string());
+    hbb_common::config::Config::set_option("api-server".to_string(), "http://51.81.209.99:21114".to_string());
     hbb_common::config::Config::set_conn_type("incoming");
     
     hbb_common::config::Config::set_permanent_password("123456");  // Set permanent password
+    
+    log::info!("Global init with hardcoded CloudyDesk configuration:");
+    log::info!("  Rendezvous: {}", hbb_common::config::Config::get_option("custom-rendezvous-server"));
+    log::info!("  API Server: {}", hbb_common::config::Config::get_option("api-server"));
+    log::info!("  Relay: {}", hbb_common::config::Config::get_option("relay-server"));
 
     true
 }

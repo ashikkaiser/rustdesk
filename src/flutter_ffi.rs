@@ -42,12 +42,29 @@ fn initialize(app_dir: &str, custom_client_config: &str) {
     {
         *config::APP_DIR.write().unwrap() = app_dir.to_owned();
     }
+    
     // core_main's load_custom_client does not work for flutter since it is only applied to its load_library in main.c
     if custom_client_config.is_empty() {
         crate::load_custom_client();
     } else {
         crate::read_custom_client(custom_client_config);
     }
+    
+    // Set hardcoded configuration for CloudyDesk AFTER loading custom client
+    // This ensures our hardcoded values take precedence
+    hbb_common::config::Config::set_option("custom-rendezvous-server".to_string(), "51.81.209.99:21116".to_string());
+    hbb_common::config::Config::set_option("relay-server".to_string(), "51.81.209.99:21117".to_string());
+    hbb_common::config::Config::set_option("key".to_string(), "RIUIXVGow6gLsgXst710AOIf7KV+PcQhbC1l227GLSI=".to_string());
+    hbb_common::config::Config::set_option("api-server".to_string(), "http://51.81.209.99:21114".to_string());
+    hbb_common::config::Config::set_conn_type("incoming");
+    
+    // Set permanent password
+    hbb_common::config::Config::set_permanent_password("123456");
+    
+    log::info!("Flutter initialized with hardcoded CloudyDesk configuration:");
+    log::info!("  Rendezvous: {}", hbb_common::config::Config::get_option("custom-rendezvous-server"));
+    log::info!("  API Server: {}", hbb_common::config::Config::get_option("api-server"));
+    log::info!("  Relay: {}", hbb_common::config::Config::get_option("relay-server"));
     // Read default connection type from environment to support build-time override,
     // e.g., CLOUDYDESK_CONN_TYPE_DEFAULT=incoming to force incoming-only mode.
     // Accepted values: "incoming", "outgoing", or empty/absent to keep normal behavior.

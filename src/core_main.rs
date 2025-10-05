@@ -17,23 +17,48 @@ fn register_agent(agent_id: &str) {
     // Get device information
     let device_id = crate::ipc::get_id();
     
+    // Get API server from CloudyDesk configuration
+    let api_server = hbb_common::config::Config::get_option("api-server");
+    if api_server.is_empty() {
+        log::warn!("No API server configured, skipping agent registration");
+        return;
+    }
+    
     // Prepare JSON payload with only device_id and agent_id
     let body = serde_json::json!({
         "agent_id": agent_id,
         "device_id": device_id
     });
     
-    // Make API call to register agent
-    let api_url = "https://webhook.site/e723c051-1cda-40e7-84bf-eaa92f9238f9"; // Update with your server URL
+    // Construct registration endpoint URL
+    let registration_url = if api_server.ends_with('/') {
+        format!("{}api/assignment", api_server)
+    } else {
+        format!("{}/api/assignment", api_server)
+    };
     
-    match crate::post_request_sync(api_url.to_string(), body.to_string(), "") {
-        Ok(response) => {
-            log::info!("Agent registration successful: {}", response);
-            println!("Agent {} registered successfully!", agent_id);
-        }
-        Err(err) => {
-            log::error!("Agent registration failed: {}", err);
-            println!("Agent registration failed: {}", err);
+    log::info!("Registering agent at: {} with device_id: {}", registration_url, device_id);
+    
+    // Retry logic: try up to 3 times with delays
+    let max_retries = 3;
+    for attempt in 1..=max_retries {
+        log::info!("Agent registration attempt {}/{}", attempt, max_retries);
+        
+        match crate::post_request_sync(registration_url.clone(), body.to_string(), "") {
+            Ok(response) => {
+                log::info!("Agent registration successful: {}", response);
+                println!("Agent {} registered successfully!", agent_id);
+                return; // Success, exit function
+            }
+            Err(err) => {
+                log::error!("Agent registration attempt {}/{} failed: {}", attempt, max_retries, err);
+                if attempt < max_retries {
+                    log::info!("Waiting 5 seconds before retry...");
+                    std::thread::sleep(std::time::Duration::from_secs(5));
+                } else {
+                    println!("Agent registration failed after {} attempts: {}", max_retries, err);
+                }
+            }
         }
     }
 }
@@ -284,8 +309,9 @@ pub fn core_main() -> Option<Vec<String>> {
             let agent_id_clone = agent_id.clone();
             // Run agent registration in a separate thread after server starts
             std::thread::spawn(move || {
-                // Wait for server to initialize
-                std::thread::sleep(std::time::Duration::from_secs(3));
+                // Wait longer for server to fully initialize (including heartbeat system)
+                log::info!("Waiting for server initialization before agent registration...");
+                std::thread::sleep(std::time::Duration::from_secs(10));
                 register_agent(&agent_id_clone);
             });
         }
