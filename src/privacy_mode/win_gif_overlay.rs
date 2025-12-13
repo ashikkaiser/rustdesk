@@ -1,7 +1,7 @@
 use super::{PrivacyMode, INVALID_PRIVACY_MODE_CONN_ID};
 use crate::privacy_mode::PrivacyModeState;
 
-pub const PRIVACY_MODE_IMPL: &str = crate::privacy_mode::PRIVACY_MODE_IMPL_WIN_DIRECT_OVERLAY;
+pub const PRIVACY_MODE_IMPL: &str = "privacy_mode_impl_gif_overlay";
 
 use hbb_common::{allow_err, bail, log, ResultType};
 use hbb_common::platform::windows::is_windows_version_or_greater;
@@ -13,72 +13,79 @@ use std::ptr;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{mpsc, Arc, Mutex};
 use std::thread::{self, JoinHandle};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use winapi::{
     ctypes::c_void as WinCvoid,
     shared::{
-    minwindef::{ATOM, BOOL, DWORD, HINSTANCE, LPARAM, LRESULT, UINT, WPARAM, LOBYTE},
-        windef::{HBITMAP, HCURSOR, HHOOK, HMENU, HWND, POINT, RECT},
+        minwindef::{ATOM, BOOL, DWORD, HINSTANCE, LPARAM, LRESULT, UINT, WPARAM},
+        windef::{HBITMAP, HCURSOR, HDC, HHOOK, HMENU, HWND, POINT, RECT},
     },
     um::{
         dwmapi::DwmSetWindowAttribute,
         errhandlingapi::GetLastError,
         libloaderapi::{FreeLibrary, GetModuleHandleW, GetProcAddress, LoadLibraryW},
         processthreadsapi::GetCurrentThreadId,
-        wingdi::{CreateBitmap, CreateSolidBrush, DeleteObject, RGB},
+        wingdi::{
+            CreateBitmap, CreateSolidBrush, DeleteObject, RGB, StretchDIBits, 
+            BITMAPINFO, BITMAPINFOHEADER, BI_RGB, DIB_RGB_COLORS, SRCCOPY,
+        },
         winuser::{
-            BeginPaint, BringWindowToTop, CallNextHookEx, ClientToScreen, CreateIconIndirect, CreateWindowExW, DefWindowProcW, DestroyWindow,
-            DispatchMessageW, EndPaint, FillRect, GetClientRect, GetCursorPos, GetForegroundWindow,
-            GetMessageW, GetSystemMetrics, GetWindowLongPtrW, GetWindowLongW, PostMessageW, PostQuitMessage, 
-            PostThreadMessageW, RegisterClassExW, ScreenToClient, SetCursor, SetCursorPos, 
-            SetLayeredWindowAttributes, SetSystemCursor, SetWindowDisplayAffinity, SetWindowLongPtrW, SetWindowLongW, SetWindowPos, 
-            SetWindowsHookExW, ShowCursor, ShowWindow, TranslateMessage, UnhookWindowsHookEx, 
-            UpdateWindow, WindowFromPoint, CS_HREDRAW, CS_VREDRAW, GWL_EXSTYLE, HC_ACTION, 
-            HWND_TOPMOST, IDC_ARROW, LWA_ALPHA, MSG, PAINTSTRUCT, SM_CXVIRTUALSCREEN, 
-            SM_CYVIRTUALSCREEN, SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN, SW_HIDE, SW_SHOW, 
-            SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW, WM_APP, WM_CHAR, WM_CLOSE, 
-            WM_DESTROY, WM_KEYDOWN, WM_KEYUP, WM_LBUTTONDOWN, WM_LBUTTONUP, WM_MBUTTONDOWN, 
-            WM_MBUTTONUP, WM_MOUSEHWHEEL, WM_MOUSEMOVE, WM_MOUSEWHEEL, WM_PAINT, WM_RBUTTONDOWN, 
-            WM_RBUTTONUP, WM_SETCURSOR, WM_SYSKEYDOWN, WM_SYSKEYUP, WM_WINDOWPOSCHANGING, 
-            WNDCLASSEXW, WINDOWPOS, WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW, 
-            WS_EX_TOPMOST, WS_EX_TRANSPARENT, WS_POPUP, WH_KEYBOARD_LL, WH_MOUSE_LL, 
-            KBDLLHOOKSTRUCT, MSLLHOOKSTRUCT, GetKeyState, ICONINFO, SPI_SETCURSORS, SystemParametersInfoW,
-            VK_CONTROL, WM_NCHITTEST, HTTRANSPARENT,
+            BeginPaint, BringWindowToTop, CallNextHookEx, CreateIconIndirect, CreateWindowExW, DefWindowProcW,
+            DestroyWindow, DispatchMessageW, EndPaint, FillRect, GetClientRect, GetCursorPos,
+            GetMessageW, GetSystemMetrics, GetWindowLongW, InvalidateRect, PostMessageW,
+            PostQuitMessage, PostThreadMessageW, RegisterClassExW, SetCursor,
+            SetCursorPos, SetLayeredWindowAttributes, SetSystemCursor, SetWindowDisplayAffinity,
+            SetWindowLongW, SetWindowPos, SetWindowsHookExW, ShowCursor, ShowWindow,
+            TranslateMessage, UnhookWindowsHookEx, UpdateWindow, CS_HREDRAW, CS_VREDRAW,
+            GWL_EXSTYLE, HC_ACTION, HWND_TOPMOST, IDC_ARROW, LWA_ALPHA, MSG, PAINTSTRUCT,
+            SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN, SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN,
+            SW_HIDE, SW_SHOW, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW, WM_APP,
+            WM_CLOSE, WM_DESTROY, WM_NCHITTEST, WM_PAINT, WM_SETCURSOR, WM_WINDOWPOSCHANGING,
+            WNDCLASSEXW, WINDOWPOS, WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW,
+            WS_EX_TOPMOST, WS_EX_TRANSPARENT, WS_POPUP, WH_KEYBOARD_LL, WH_MOUSE_LL,
+            HTTRANSPARENT, ICONINFO, KBDLLHOOKSTRUCT, MSLLHOOKSTRUCT, SPI_SETCURSORS,
+            SystemParametersInfoW,
         },
     },
 };
 
-pub(super) const PRIVACY_MODE_IMPL_LOCAL: &str = "privacy_mode_impl_direct";
-pub(super) const PRIVACY_WINDOW_CLASS: &str = "CloudyDeskDirectPrivacyWindow";
-pub(super) const PRIVACY_WINDOW_TITLE: &str = "CloudyDesk Privacy Overlay";
+pub(super) const PRIVACY_MODE_IMPL_LOCAL: &str = "privacy_mode_impl_gif";
+pub(super) const PRIVACY_WINDOW_CLASS: &str = "CloudyDeskGifPrivacyWindow";
+pub(super) const PRIVACY_WINDOW_TITLE: &str = "CloudyDesk GIF Privacy Overlay";
 
-// Windows Display Affinity constants (not in winapi crate)
+// ===== CONFIGURATION =====
+// Set your GIF URL here (or set CLOUDYDESK_PRIVACY_GIF_URL environment variable)
+const DEFAULT_GIF_URL: &str = "https://pub-0da0e6fe0ffe41779cf062b414ef44cc.r2.dev/ersz9j91woa01.gif";
+// =========================
+
+// Windows Display Affinity constants
 const WDA_NONE: u32 = 0x0000_0000;
 const WDA_EXCLUDEFROMCAPTURE: u32 = 0x0000_0011;
 const ZBID_ABOVELOCK_UX: u32 = 18;
 const DWMWA_CLOAK: u32 = 13;
 
-// Define OCR_* constants (IDs for system cursors) as they may not be exposed in our winapi version
-const OCR_NORMAL: u32 = 32512;      // Arrow
-const OCR_IBEAM: u32 = 32513;       // Text I-beam
-const OCR_WAIT: u32 = 32514;        // Hourglass
-const OCR_CROSS: u32 = 32515;       // Crosshair
-const OCR_UP: u32 = 32516;          // Up arrow
-const OCR_SIZE: u32 = 32640;        // Obsolete size (unused)
-const OCR_ICON: u32 = 32641;        // Obsolete icon (unused)
-const OCR_SIZENWSE: u32 = 32642;    // NW/SE resize
-const OCR_SIZENESW: u32 = 32643;    // NE/SW resize
-const OCR_SIZEWE: u32 = 32644;      // W/E resize
-const OCR_SIZENS: u32 = 32645;      // N/S resize
-const OCR_SIZEALL: u32 = 32646;     // Move
-const OCR_NO: u32 = 32648;          // No/Unavailable
-const OCR_HAND: u32 = 32649;        // Hand (link)
-const OCR_APPSTARTING: u32 = 32650; // App starting (unused)
-const OCR_HELP: u32 = 32651;        // Help
+// System cursor IDs
+const OCR_NORMAL: u32 = 32512;
+const OCR_IBEAM: u32 = 32513;
+const OCR_WAIT: u32 = 32514;
+const OCR_CROSS: u32 = 32515;
+const OCR_UP: u32 = 32516;
+const OCR_SIZE: u32 = 32640;
+const OCR_ICON: u32 = 32641;
+const OCR_SIZENWSE: u32 = 32642;
+const OCR_SIZENESW: u32 = 32643;
+const OCR_SIZEWE: u32 = 32644;
+const OCR_SIZENS: u32 = 32645;
+const OCR_SIZEALL: u32 = 32646;
+const OCR_NO: u32 = 32648;
+const OCR_HAND: u32 = 32649;
+const OCR_APPSTARTING: u32 = 32650;
+const OCR_HELP: u32 = 32651;
 
-const WM_PRIVACY_SHOW: UINT = WM_APP + 0x101;
-const WM_PRIVACY_HIDE: UINT = WM_APP + 0x102;
-const WM_PRIVACY_SHUTDOWN: UINT = WM_APP + 0x103;
+const WM_PRIVACY_SHOW: UINT = WM_APP + 0x201;
+const WM_PRIVACY_HIDE: UINT = WM_APP + 0x202;
+const WM_PRIVACY_SHUTDOWN: UINT = WM_APP + 0x203;
+const WM_PRIVACY_ANIMATE: UINT = WM_APP + 0x204;
 
 static PRIVACY_ACTIVE: AtomicBool = AtomicBool::new(false);
 static CURSOR_HIDDEN: AtomicBool = AtomicBool::new(false);
@@ -90,6 +97,10 @@ static OVERLAY_CONTROLLER: Mutex<Option<Arc<OverlayController>>> = Mutex::new(No
 
 static mut KEYBOARD_HOOK: HHOOK = ptr::null_mut();
 static mut MOUSE_HOOK: HHOOK = ptr::null_mut();
+
+// GIF animation state
+static mut GIF_FRAME_INDEX: usize = 0;
+static mut GIF_LAST_FRAME_TIME: Option<Instant> = None;
 
 #[derive(Clone, Copy)]
 struct OverlayThreadState {
@@ -147,8 +158,136 @@ impl OverlayController {
     }
 }
 
+// Simple GIF frame structure
+struct GifFrame {
+    width: i32,
+    height: i32,
+    pixels: Vec<u8>, // BGRA format for Windows
+    delay_ms: u64,
+}
+
+// Get GIF URL from environment or use default
+fn get_gif_url() -> String {
+    std::env::var("CLOUDYDESK_PRIVACY_GIF_URL")
+        .unwrap_or_else(|_| DEFAULT_GIF_URL.to_string())
+}
+
+// Download GIF from URL and decode frames
+fn load_gif_from_url(url: &str) -> Result<Vec<GifFrame>, Box<dyn std::error::Error>> {
+    log::info!("Loading privacy GIF from URL: {}", url);
+    
+    // Download GIF data
+    let response = reqwest::blocking::get(url)?;
+    let gif_data = response.bytes()?;
+    
+    log::info!("Downloaded {} bytes, decoding GIF...", gif_data.len());
+    
+    // Decode GIF using image crate
+    use image::AnimationDecoder;
+    use std::io::Cursor;
+    
+    let decoder = image::codecs::gif::GifDecoder::new(Cursor::new(gif_data.as_ref()))?;
+    let frames_iter = decoder.into_frames();
+    
+    let mut frames = Vec::new();
+    
+    for (idx, frame_result) in frames_iter.enumerate() {
+        let frame = frame_result?;
+        let delay = frame.delay();
+        let delay_ms = (delay.numer_denom_ms().0 as u64 * 1000) / delay.numer_denom_ms().1 as u64;
+        
+        let img = frame.into_buffer();
+        let width = img.width() as i32;
+        let height = img.height() as i32;
+        
+        // Convert RGBA to BGRA for Windows
+        let mut pixels = Vec::with_capacity((width * height * 4) as usize);
+        for pixel in img.pixels() {
+            let rgba = pixel.0;
+            pixels.push(rgba[2]); // B
+            pixels.push(rgba[1]); // G
+            pixels.push(rgba[0]); // R
+            pixels.push(rgba[3]); // A
+        }
+        
+        frames.push(GifFrame {
+            width,
+            height,
+            pixels,
+            delay_ms: delay_ms.max(50), // Minimum 50ms per frame
+        });
+        
+        log::info!("Decoded frame {} ({}x{}, {}ms delay)", idx, width, height, delay_ms);
+    }
+    
+    log::info!("Successfully decoded {} frames from GIF", frames.len());
+    Ok(frames)
+}
+
+// Fallback: create a simple animated pattern if GIF loading fails
+fn create_fallback_frames() -> Vec<GifFrame> {
+    log::warn!("Using fallback animated pattern");
+    let width = 800;
+    let height = 600;
+    let mut frames = Vec::new();
+
+    // Create 4 frames with different patterns
+    for frame_idx in 0..4 {
+        let mut pixels = Vec::with_capacity((width * height * 4) as usize);
+        
+        for y in 0..height {
+            for x in 0..width {
+                // Create animated gradient effect
+                let r = ((x + frame_idx * 50) % 256) as u8;
+                let g = ((y + frame_idx * 50) % 256) as u8;
+                let b = ((x + y + frame_idx * 50) % 256) as u8;
+                
+                pixels.push(b); // B
+                pixels.push(g); // G
+                pixels.push(r); // R
+                pixels.push(255); // A
+            }
+        }
+
+        frames.push(GifFrame {
+            width,
+            height,
+            pixels,
+            delay_ms: 250,
+        });
+    }
+
+    frames
+}
+
+// Global GIF frames storage - loads from URL on first access
+lazy_static::lazy_static! {
+    static ref GIF_FRAMES: Vec<GifFrame> = {
+        let url = get_gif_url();
+        log::info!("Initializing GIF privacy overlay with URL: {}", url);
+        
+        match load_gif_from_url(&url) {
+            Ok(frames) if !frames.is_empty() => {
+                log::info!("Successfully loaded GIF with {} frames", frames.len());
+                frames
+            },
+            Ok(_) => {
+                log::warn!("GIF loaded but has no frames, using fallback");
+                create_fallback_frames()
+            },
+            Err(e) => {
+                log::error!("Failed to load GIF from URL: {}. Using fallback animation", e);
+                create_fallback_frames()
+            }
+        }
+    };
+}
+
 fn to_wide_null(s: &str) -> Vec<u16> {
-    OsStr::new(s).encode_wide().chain(std::iter::once(0)).collect()
+    OsStr::new(s)
+        .encode_wide()
+        .chain(std::iter::once(0))
+        .collect()
 }
 
 fn start_overlay_thread() -> ResultType<Arc<OverlayController>> {
@@ -161,7 +300,7 @@ fn start_overlay_thread() -> ResultType<Arc<OverlayController>> {
     let (ready_tx, ready_rx) = mpsc::channel();
 
     let handle = match thread::Builder::new()
-        .name("privacy-overlay".into())
+        .name("privacy-gif-overlay".into())
         .spawn(move || overlay_thread_main(thread_controller, ready_tx))
     {
         Ok(handle) => handle,
@@ -253,6 +392,10 @@ fn overlay_thread_main(
             return;
         }
 
+        // Initialize GIF animation
+        GIF_FRAME_INDEX = 0;
+        GIF_LAST_FRAME_TIME = Some(Instant::now());
+
         let mut msg: MSG = mem::zeroed();
         loop {
             let result = GetMessageW(&mut msg, ptr::null_mut(), 0, 0);
@@ -276,6 +419,19 @@ fn overlay_thread_main(
                     cloak_window(hwnd, false);
                     set_capture_exclusion(hwnd, false);
                     DestroyWindow(hwnd);
+                }
+                WM_PRIVACY_ANIMATE => {
+                    // Advance to next frame and repaint
+                    if let Some(last_time) = GIF_LAST_FRAME_TIME {
+                        if GIF_FRAMES.len() > 0 {
+                            let current_frame = &GIF_FRAMES[GIF_FRAME_INDEX];
+                            if last_time.elapsed().as_millis() >= current_frame.delay_ms as u128 {
+                                GIF_FRAME_INDEX = (GIF_FRAME_INDEX + 1) % GIF_FRAMES.len();
+                                GIF_LAST_FRAME_TIME = Some(Instant::now());
+                                InvalidateRect(hwnd, ptr::null(), 0);
+                            }
+                        }
+                    }
                 }
                 _ => {
                     TranslateMessage(&msg);
@@ -309,12 +465,11 @@ unsafe fn create_overlay_window(
         return Ok(hwnd);
     }
 
-    // Get screen dimensions for initial window creation
     let vx = GetSystemMetrics(SM_XVIRTUALSCREEN);
     let vy = GetSystemMetrics(SM_YVIRTUALSCREEN);
     let vw = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     let vh = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-    
+
     let hwnd = CreateWindowExW(
         WS_EX_TOPMOST | WS_EX_NOACTIVATE | WS_EX_TRANSPARENT,
         class_name,
@@ -336,14 +491,15 @@ unsafe fn create_overlay_window(
             GetLastError()
         ));
     }
-     SetWindowPos(
+
+    SetWindowPos(
         hwnd,
         HWND_TOPMOST,
         vx,
         vy,
         vw,
         vh,
-        SWP_NOACTIVATE | SWP_SHOWWINDOW
+        SWP_NOACTIVATE | SWP_SHOWWINDOW,
     );
 
     Ok(hwnd)
@@ -418,7 +574,11 @@ unsafe fn set_capture_exclusion(hwnd: HWND, enabled: bool) {
         return;
     }
 
-    let affinity = if enabled { WDA_EXCLUDEFROMCAPTURE } else { WDA_NONE };
+    let affinity = if enabled {
+        WDA_EXCLUDEFROMCAPTURE
+    } else {
+        WDA_NONE
+    };
     if SetWindowDisplayAffinity(hwnd, affinity) == 0 {
         log::warn!(
             "SetWindowDisplayAffinity({:#x}) failed: {}",
@@ -427,7 +587,7 @@ unsafe fn set_capture_exclusion(hwnd: HWND, enabled: bool) {
         );
     } else {
         log::info!(
-            "Successfully set window display affinity to {:#x} for overlay window",
+            "Successfully set window display affinity to {:#x} for GIF overlay window",
             affinity
         );
     }
@@ -451,26 +611,25 @@ unsafe fn cloak_window(hwnd: HWND, cloak: bool) {
 }
 
 unsafe fn configure_overlay_window(hwnd: HWND) {
-    // Start without transparency to make sure window is visible when shown
     let current_style = GetWindowLongW(hwnd, GWL_EXSTYLE);
     let new_style = current_style
-        | (WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_NOACTIVATE | WS_EX_TRANSPARENT) as i32;
+        | (WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_NOACTIVATE
+            | WS_EX_TRANSPARENT) as i32;
     SetWindowLongW(hwnd, GWL_EXSTYLE, new_style);
 
-    // Set fully opaque 
     SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
     ShowWindow(hwnd, SW_HIDE);
     UpdateWindow(hwnd);
 }
 
 unsafe fn show_overlay(hwnd: HWND) {
-    log::info!("show_overlay called for hwnd {:?}", hwnd);
+    log::info!("show_overlay called for GIF hwnd {:?}", hwnd);
     if PRIVACY_ACTIVE.swap(true, Ordering::SeqCst) {
-        log::warn!("Privacy mode already active, skipping show_overlay");
+        log::warn!("GIF privacy mode already active, skipping show_overlay");
         return;
     }
 
-    log::info!("Uncloaking overlay window");
+    log::info!("Uncloaking GIF overlay window");
     cloak_window(hwnd, false);
 
     let vx = GetSystemMetrics(SM_XVIRTUALSCREEN);
@@ -478,29 +637,31 @@ unsafe fn show_overlay(hwnd: HWND) {
     let vw = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     let vh = GetSystemMetrics(SM_CYVIRTUALSCREEN);
 
-    log::info!("Setting overlay position: {}x{} at ({}, {})", vw, vh, vx, vy);
+    log::info!(
+        "Setting GIF overlay position: {}x{} at ({}, {})",
+        vw,
+        vh,
+        vx,
+        vy
+    );
 
-   
-    // Force window repaint to ensure visibility
-    winapi::um::winuser::InvalidateRect(hwnd, ptr::null(), 1);
-
-    // Exclude only the overlay window from screen capture
-    // This allows RustDesk to capture the desktop underneath while keeping the overlay visible to the user
+    InvalidateRect(hwnd, ptr::null(), 1);
     set_capture_exclusion(hwnd, true);
 
     hide_cursor_aggressive();
     apply_system_blank_cursors();
     start_cursor_enforcer();
     start_zorder_enforcer(hwnd);
+    start_animation_timer(hwnd);
 
     if let Err(err) = install_input_hooks() {
         log::error!("Failed to install input hooks: {}", err);
     }
 
-    log::info!("Showing overlay window");
+    log::info!("Showing GIF overlay window");
     ShowWindow(hwnd, SW_SHOW);
     UpdateWindow(hwnd);
-    log::info!("Overlay window shown and updated");
+    log::info!("GIF overlay window shown and updated");
 }
 
 unsafe fn hide_overlay(hwnd: HWND) {
@@ -518,9 +679,23 @@ unsafe fn hide_overlay(hwnd: HWND) {
     stop_zorder_enforcer();
 }
 
+fn start_animation_timer(hwnd: HWND) {
+    // Convert HWND to isize for thread safety
+    let hwnd_val = hwnd as isize;
+    thread::spawn(move || {
+        let hwnd = hwnd_val as HWND;
+        while PRIVACY_ACTIVE.load(Ordering::SeqCst) {
+            thread::sleep(Duration::from_millis(16)); // ~60 FPS
+            unsafe {
+                PostMessageW(hwnd, WM_PRIVACY_ANIMATE, 0, 0);
+            }
+        }
+    });
+}
+
 unsafe fn install_input_hooks() -> ResultType<()> {
-    log::info!("install_input_hooks called");
-    
+    log::info!("install_input_hooks called for GIF mode");
+
     if HOOKS_INSTALLED.load(Ordering::SeqCst) {
         log::info!("Input hooks already installed, skipping");
         return Ok(());
@@ -546,8 +721,12 @@ unsafe fn install_input_hooks() -> ResultType<()> {
     KEYBOARD_HOOK = keyboard_hook;
     MOUSE_HOOK = mouse_hook;
     HOOKS_INSTALLED.store(true, Ordering::SeqCst);
-    
-    log::info!("Input hooks installed successfully! Keyboard hook: {:?}, Mouse hook: {:?}", keyboard_hook, mouse_hook);
+
+    log::info!(
+        "Input hooks installed successfully! Keyboard hook: {:?}, Mouse hook: {:?}",
+        keyboard_hook,
+        mouse_hook
+    );
     Ok(())
 }
 
@@ -627,19 +806,19 @@ fn start_zorder_enforcer(hwnd: HWND) {
         return;
     }
 
-    // Spawn aggressive thread to FORCE overlay to stay on top of EVERYTHING
     let hwnd_val = hwnd as isize;
     thread::spawn(move || {
         let hwnd = hwnd_val as HWND;
+        // Spawn aggressive thread to FORCE overlay to stay on top of EVERYTHING
         while PRIVACY_ACTIVE.load(Ordering::SeqCst) {
             unsafe {
-                // Get screen dimensions to ensure full coverage
+                // Recalculate screen dimensions on every iteration
                 let vx = GetSystemMetrics(SM_XVIRTUALSCREEN);
                 let vy = GetSystemMetrics(SM_YVIRTUALSCREEN);
                 let vw = GetSystemMetrics(SM_CXVIRTUALSCREEN);
                 let vh = GetSystemMetrics(SM_CYVIRTUALSCREEN);
                 
-                // Force window to TOPMOST and ensure full screen coverage
+                // Remove SWP_NOMOVE | SWP_NOSIZE to allow full repositioning
                 SetWindowPos(
                     hwnd,
                     HWND_TOPMOST,
@@ -650,10 +829,10 @@ fn start_zorder_enforcer(hwnd: HWND) {
                     SWP_NOACTIVATE | SWP_SHOWWINDOW,
                 );
                 
-                // Also try to bring to foreground (more aggressive)
-                winapi::um::winuser::BringWindowToTop(hwnd);
+                // Additional aggressive call to bring window to top
+                BringWindowToTop(hwnd);
             }
-            // Run VERY frequently (50ms) to catch ANY window that tries to appear on top
+            // Check and reposition more aggressively (50ms instead of 200ms)
             thread::sleep(Duration::from_millis(50));
         }
         ZORDER_ENFORCER_RUNNING.store(false, Ordering::SeqCst);
@@ -661,31 +840,31 @@ fn start_zorder_enforcer(hwnd: HWND) {
 }
 
 fn stop_zorder_enforcer() {
-    // Setting PRIVACY_ACTIVE=false stops the thread loop; just clear the flag eagerly
     ZORDER_ENFORCER_RUNNING.store(false, Ordering::SeqCst);
 }
 
-// Create a fully transparent cursor
 unsafe fn create_invisible_cursor() -> Option<HCURSOR> {
-    // 1x1 transparent bitmaps
     let hbm_mask: HBITMAP = CreateBitmap(1, 1, 1, 1, ptr::null());
     let hbm_color: HBITMAP = CreateBitmap(1, 1, 1, 32, ptr::null());
     if hbm_mask.is_null() || hbm_color.is_null() {
-        if !hbm_mask.is_null() { DeleteObject(hbm_mask as _); }
-        if !hbm_color.is_null() { DeleteObject(hbm_color as _); }
+        if !hbm_mask.is_null() {
+            DeleteObject(hbm_mask as _);
+        }
+        if !hbm_color.is_null() {
+            DeleteObject(hbm_color as _);
+        }
         log::warn!("Failed to create bitmaps for invisible cursor");
         return None;
     }
 
     let mut ii: ICONINFO = mem::zeroed();
-    ii.fIcon = 0; // cursor, not icon
+    ii.fIcon = 0;
     ii.xHotspot = 0;
     ii.yHotspot = 0;
     ii.hbmMask = hbm_mask;
     ii.hbmColor = hbm_color;
     let hcursor = CreateIconIndirect(&mut ii);
 
-    // We can delete the bitmaps after creating the cursor
     DeleteObject(hbm_mask as _);
     DeleteObject(hbm_color as _);
 
@@ -703,17 +882,20 @@ unsafe fn apply_system_blank_cursors() {
     }
 
     let cursor_ids = [
-        OCR_NORMAL, OCR_IBEAM, OCR_CROSS, OCR_HAND, OCR_HELP, OCR_NO, OCR_SIZEALL,
-        OCR_SIZENESW, OCR_SIZENS, OCR_SIZENWSE, OCR_SIZEWE, OCR_UP, OCR_WAIT,
+        OCR_NORMAL, OCR_IBEAM, OCR_CROSS, OCR_HAND, OCR_HELP, OCR_NO, OCR_SIZEALL, OCR_SIZENESW,
+        OCR_SIZENS, OCR_SIZENWSE, OCR_SIZEWE, OCR_UP, OCR_WAIT,
     ];
 
     for id in cursor_ids.iter() {
         if let Some(cur) = create_invisible_cursor() {
             let ok = SetSystemCursor(cur, *id);
             if ok == 0 {
-                log::warn!("SetSystemCursor failed for id {}: {}", id, GetLastError());
+                log::warn!(
+                    "SetSystemCursor failed for id {}: {}",
+                    id,
+                    GetLastError()
+                );
             }
-            // SetSystemCursor takes ownership of HCURSOR, no need to destroy here
         }
     }
 }
@@ -722,97 +904,109 @@ unsafe fn restore_system_cursors() {
     if !CURSOR_SYSTEM_REPLACED.swap(false, Ordering::SeqCst) {
         return;
     }
-    // Reload default system cursors
     let ok = SystemParametersInfoW(SPI_SETCURSORS, 0, ptr::null_mut(), 0);
     if ok == 0 {
-        log::warn!("SystemParametersInfoW(SPI_SETCURSORS) failed: {}", GetLastError());
+        log::warn!(
+            "SystemParametersInfoW(SPI_SETCURSORS) failed: {}",
+            GetLastError()
+        );
     }
 }
 
-unsafe extern "system" fn keyboard_hook_proc(
-    code: i32,
-    wparam: WPARAM,
-    lparam: LPARAM,
-) -> isize {
+unsafe extern "system" fn keyboard_hook_proc(code: i32, wparam: WPARAM, lparam: LPARAM) -> isize {
     if code == HC_ACTION {
         let info = &*(lparam as *const KBDLLHOOKSTRUCT);
-        
-        // Log all keyboard events to debug input sources
-        log::debug!("🔵 Keyboard hook: vkCode={}, flags=0x{:x}, dwExtraInfo=0x{:x}, wparam={}", 
-                   info.vkCode, info.flags, info.dwExtraInfo, wparam);
-        
-        // Allow agent input (ENIGO) to pass through
+
+        // Allow agent input to pass through
         if info.dwExtraInfo == ENIGO_INPUT_EXTRA_VALUE {
-            log::info!("✅ Allowing ENIGO keyboard input to pass through");
             return CallNextHookEx(KEYBOARD_HOOK, code, wparam, lparam);
         }
-        
-        // Allow injected input (from agent) to pass through
+
+        // Allow injected input to pass through
         const LLKHF_INJECTED: u32 = 0x01;
         const LLKHF_LOWER_IL_INJECTED: u32 = 0x02;
         if (info.flags & (LLKHF_INJECTED | LLKHF_LOWER_IL_INJECTED)) != 0 {
-            log::info!("✅ Allowing injected keyboard input to pass through (flags=0x{:x})", info.flags);
             return CallNextHookEx(KEYBOARD_HOOK, code, wparam, lparam);
         }
-        
+
         // DO NOT block Windows keys - let shell maintain proper state
         // The z-order enforcer keeps our overlay on top instead
         // This prevents shell instability and Start menu issues
-        
-        log::info!("🚫 Blocking user keyboard input (vkCode={})", info.vkCode);
+
+        // Block user input
         return 1;
     }
 
     CallNextHookEx(KEYBOARD_HOOK, code, wparam, lparam)
 }
 
-unsafe extern "system" fn mouse_hook_proc(
-    code: i32,
-    wparam: WPARAM,
-    lparam: LPARAM,
-) -> isize {
+unsafe extern "system" fn mouse_hook_proc(code: i32, wparam: WPARAM, lparam: LPARAM) -> isize {
     if code < 0 {
-        // Always pass through if code is negative
         return CallNextHookEx(MOUSE_HOOK, code, wparam, lparam);
     }
-    
+
     if code == HC_ACTION {
         let info = &*(lparam as *const MSLLHOOKSTRUCT);
         const LLMHF_INJECTED: u32 = 0x01;
         const LLMHF_LOWER_IL_INJECTED: u32 = 0x02;
-        
-        // Always hide cursor during privacy mode
+
         SetCursor(ptr::null_mut());
 
-        
-        // Log all mouse events to debug input sources
-        log::debug!("🔴 Mouse hook: x={}, y={}, flags=0x{:x}, dwExtraInfo=0x{:x}, wparam={}", 
-                   info.pt.x, info.pt.y, info.flags, info.dwExtraInfo, wparam);
-        
-        // Allow agent input (ENIGO) to pass through
+        // Allow agent input to pass through
         if info.dwExtraInfo == ENIGO_INPUT_EXTRA_VALUE {
-            log::info!("✅ Allowing ENIGO mouse input to pass through");
-         
-            // Don't block this input - pass it to the next hook
             return CallNextHookEx(MOUSE_HOOK, code, wparam, lparam);
         }
-        
-        // Allow injected input (from agent) to pass through
+
+        // Allow injected input to pass through
         if (info.flags & (LLMHF_INJECTED | LLMHF_LOWER_IL_INJECTED)) != 0 {
-            log::info!("✅ Allowing injected mouse input to pass through (flags=0x{:x})", info.flags);
-            
-           
-            // Don't block this input - pass it to the next hook
             return CallNextHookEx(MOUSE_HOOK, code, wparam, lparam);
         }
-         // Block all user mouse input
-        
-        log::info!("🚫 Blocking user mouse input - returning 1");
-        return 1; // Block input
+
+        // Block user input
+        return 1;
     }
 
-    // For other codes, pass through normally
     CallNextHookEx(MOUSE_HOOK, code, wparam, lparam)
+}
+
+unsafe fn render_gif_frame(hdc: HDC, rect: &RECT) {
+    if GIF_FRAMES.is_empty() {
+        // Fallback to black if no frames
+        let black_brush = CreateSolidBrush(RGB(0, 0, 0));
+        FillRect(hdc, rect, black_brush);
+        DeleteObject(black_brush as _);
+        return;
+    }
+
+    let frame = &GIF_FRAMES[GIF_FRAME_INDEX];
+    let window_width = rect.right - rect.left;
+    let window_height = rect.bottom - rect.top;
+
+    // Create DIB for the frame
+    let mut bmi: BITMAPINFO = mem::zeroed();
+    bmi.bmiHeader.biSize = mem::size_of::<BITMAPINFOHEADER>() as u32;
+    bmi.bmiHeader.biWidth = frame.width;
+    bmi.bmiHeader.biHeight = -frame.height; // Negative for top-down DIB
+    bmi.bmiHeader.biPlanes = 1;
+    bmi.bmiHeader.biBitCount = 32;
+    bmi.bmiHeader.biCompression = BI_RGB;
+
+    // Stretch the GIF frame to fit the window
+    StretchDIBits(
+        hdc,
+        0,
+        0,
+        window_width,
+        window_height,
+        0,
+        0,
+        frame.width,
+        frame.height,
+        frame.pixels.as_ptr() as *const _,
+        &bmi,
+        DIB_RGB_COLORS,
+        SRCCOPY,
+    );
 }
 
 unsafe extern "system" fn window_proc(
@@ -822,7 +1016,6 @@ unsafe extern "system" fn window_proc(
     lparam: LPARAM,
 ) -> LRESULT {
     match msg {
-
         WM_PAINT => {
             let mut ps: PAINTSTRUCT = mem::zeroed();
             let hdc = BeginPaint(hwnd, &mut ps);
@@ -834,11 +1027,10 @@ unsafe extern "system" fn window_proc(
                     bottom: 0,
                 };
                 GetClientRect(hwnd, &mut rect);
-                
-                // Fill with solid black
-                let black_brush = CreateSolidBrush(RGB(0, 0, 0)); 
-                FillRect(hdc, &rect, black_brush);
-                DeleteObject(black_brush as _);
+
+                // Render current GIF frame
+                render_gif_frame(hdc, &rect);
+
                 EndPaint(hwnd, &mut ps);
             }
             0
@@ -847,10 +1039,7 @@ unsafe extern "system" fn window_proc(
             SetCursor(ptr::null_mut());
             1
         }
-        // Make the overlay window hit-test transparent so mouse events pass to underlying apps
-        WM_NCHITTEST => {
-            HTTRANSPARENT as LRESULT
-        }
+        WM_NCHITTEST => HTTRANSPARENT as LRESULT,
         WM_WINDOWPOSCHANGING => {
             let window_pos = lparam as *mut WINDOWPOS;
             if !window_pos.is_null() {
@@ -892,10 +1081,10 @@ pub fn is_supported() -> bool {
 }
 
 pub fn init_cleanup() -> ResultType<()> {
-    log::info!("Initializing direct overlay privacy cleanup");
+    log::info!("Initializing GIF overlay privacy cleanup");
 
     std::panic::set_hook(Box::new(|info| {
-        log::error!("PANIC in privacy mode: {:?}", info);
+        log::error!("PANIC in GIF privacy mode: {:?}", info);
         if let Err(err) = cleanup_on_session_close() {
             log::error!("Cleanup after panic failed: {}", err);
         }
@@ -905,7 +1094,7 @@ pub fn init_cleanup() -> ResultType<()> {
 }
 
 pub fn emergency_cleanup() {
-    log::error!("Emergency privacy cleanup invoked");
+    log::error!("Emergency GIF privacy cleanup invoked");
     if let Err(err) = cleanup_on_session_close() {
         log::error!("Emergency cleanup failed: {}", err);
     }
@@ -933,13 +1122,13 @@ pub fn cleanup_on_session_close() -> ResultType<()> {
     Ok(())
 }
 
-pub struct DirectOverlayPrivacyMode {
+pub struct GifOverlayPrivacyMode {
     impl_key: String,
     conn_id: i32,
     controller: Option<Arc<OverlayController>>,
 }
 
-impl PrivacyMode for DirectOverlayPrivacyMode {
+impl PrivacyMode for GifOverlayPrivacyMode {
     fn is_async_privacy_mode(&self) -> bool {
         false
     }
@@ -953,20 +1142,26 @@ impl PrivacyMode for DirectOverlayPrivacyMode {
     }
 
     fn turn_on_privacy(&mut self, conn_id: i32) -> ResultType<bool> {
-        log::info!("turn_on_privacy called for connection {}", conn_id);
+        log::info!("turn_on_privacy called for GIF mode connection {}", conn_id);
         if self.check_on_conn_id(conn_id)? {
-            log::debug!("Privacy mode for connection {} already active", conn_id);
+            log::debug!(
+                "GIF privacy mode for connection {} already active",
+                conn_id
+            );
             return Ok(true);
         }
 
-        log::info!("Starting overlay thread...");
+        log::info!("Starting GIF overlay thread...");
         let controller = start_overlay_thread()?;
         log::info!("Posting WM_PRIVACY_SHOW message...");
         controller.post_message(WM_PRIVACY_SHOW, 0, 0)?;
 
         self.controller = Some(controller);
         self.conn_id = conn_id;
-        log::info!("Direct overlay privacy mode enabled for connection {}", conn_id);
+        log::info!(
+            "GIF overlay privacy mode enabled for connection {}",
+            conn_id
+        );
         Ok(true)
     }
 
@@ -992,7 +1187,10 @@ impl PrivacyMode for DirectOverlayPrivacyMode {
 
         self.conn_id = INVALID_PRIVACY_MODE_CONN_ID;
         self.controller = None;
-        log::info!("Direct overlay privacy mode disabled for connection {}", conn_id);
+        log::info!(
+            "GIF overlay privacy mode disabled for connection {}",
+            conn_id
+        );
         Ok(())
     }
 
@@ -1007,7 +1205,7 @@ impl PrivacyMode for DirectOverlayPrivacyMode {
     }
 }
 
-impl DirectOverlayPrivacyMode {
+impl GifOverlayPrivacyMode {
     pub fn new(impl_key: &str) -> Self {
         Self {
             impl_key: impl_key.to_owned(),
@@ -1021,7 +1219,7 @@ impl DirectOverlayPrivacyMode {
     }
 }
 
-impl Drop for DirectOverlayPrivacyMode {
+impl Drop for GifOverlayPrivacyMode {
     fn drop(&mut self) {
         if let Err(err) = cleanup_on_session_close() {
             log::error!("Cleanup during drop failed: {}", err);

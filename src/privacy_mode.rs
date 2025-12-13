@@ -24,6 +24,8 @@ pub mod win_mag;
 pub mod win_topmost_window;
 #[cfg(windows)]
 pub mod win_direct_overlay;
+#[cfg(windows)]
+pub mod win_gif_overlay;
 
 #[cfg(windows)]
 mod win_virtual_display;
@@ -41,6 +43,7 @@ pub const PRIVACY_MODE_IMPL_WIN_EXCLUDE_FROM_CAPTURE: &str =
     "privacy_mode_impl_exclude_from_capture";
 pub const PRIVACY_MODE_IMPL_WIN_VIRTUAL_DISPLAY: &str = "privacy_mode_impl_virtual_display";
 pub const PRIVACY_MODE_IMPL_WIN_DIRECT_OVERLAY: &str = "privacy_mode_impl_direct_overlay";
+pub const PRIVACY_MODE_IMPL_WIN_GIF_OVERLAY: &str = "privacy_mode_impl_gif_overlay";
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(tag = "t", content = "c")]
@@ -142,6 +145,13 @@ lazy_static::lazy_static! {
             if win_direct_overlay::is_supported() {
                 map.insert(win_direct_overlay::PRIVACY_MODE_IMPL, |impl_key: &str| {
                     Box::new(win_direct_overlay::DirectOverlayPrivacyMode::new(impl_key))
+                });
+            }
+
+            // Add the GIF overlay mode
+            if win_gif_overlay::is_supported() {
+                map.insert(win_gif_overlay::PRIVACY_MODE_IMPL, |impl_key: &str| {
+                    Box::new(win_gif_overlay::GifOverlayPrivacyMode::new(impl_key))
                 });
             }
 
@@ -346,6 +356,17 @@ pub fn get_supported_privacy_mode_impl() -> Vec<(&'static str, &'static str)> {
             ));
         } else {
             log::warn!("Direct overlay mode not supported");
+        }
+
+        // Add the GIF overlay mode (Mode 1)
+        if win_gif_overlay::is_supported() {
+            log::info!("Adding GIF overlay mode (Mode 1): {}", PRIVACY_MODE_IMPL_WIN_GIF_OVERLAY);
+            vec_impls.push((
+                PRIVACY_MODE_IMPL_WIN_GIF_OVERLAY,
+                "privacy_mode_impl_gif_overlay_tip",
+            ));
+        } else {
+            log::warn!("GIF overlay mode not supported");
         }
 
         if win_exclude_from_capture::is_supported() {
