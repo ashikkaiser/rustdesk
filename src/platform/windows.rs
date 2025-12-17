@@ -1470,6 +1470,12 @@ if exist \"{tmp_path}\\{app_name} Tray.lnk\" del /f /q \"{tmp_path}\\{app_name} 
         Config::set_option("custom-rendezvous-server".into(), lic.host);
         Config::set_option("api-server".into(), lic.api);
     }
+    
+    // Save agent ID to config if provided
+    if let Some(agent_id) = agent_id {
+        log::info!("Saving agent ID to config: {}", agent_id);
+        Config::set_option("agent-id".into(), agent_id.to_string());
+    }
 
     let tray_shortcuts = if config::is_outgoing_only() && !options.contains("autostart") {
         "".to_owned()
@@ -2936,6 +2942,8 @@ fn run_after_run_cmds(silent: bool) {
             .creation_flags(winapi::um::winbase::CREATE_NO_WINDOW)
             .spawn());
     }
+    
+    // Always start tray service after installation (both silent and GUI)
     if Config::get_option("stop-service") != "Y" {
         allow_err!(std::process::Command::new(&exe).arg("--tray").spawn());
     }

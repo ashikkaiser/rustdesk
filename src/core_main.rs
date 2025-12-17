@@ -152,7 +152,6 @@ pub fn core_main() -> Option<Vec<String>> {
     let mut _is_quick_support = false;
     let mut _is_flutter_invoke_new_connection = false;
     let mut no_server = false;
-    let mut agent_id: Option<String> = None;
     let mut arg_exe = Default::default();
     for arg in std::env::args() {
         if i == 0 {
@@ -179,14 +178,6 @@ pub fn core_main() -> Option<Vec<String>> {
                 _is_quick_support = true;
             } else if arg == "--no-server" {
                 no_server = true;
-            } else if arg == "--agent" {
-                // Handle --agent parameter - next argument should be the agent ID
-                let next_arg_index = i + 1;
-                let env_args: Vec<String> = std::env::args().collect();
-                if next_arg_index < env_args.len() {
-                    agent_id = Some(env_args[next_arg_index].clone());
-                    log::info!("Agent ID detected: {}", agent_id.as_ref().unwrap());
-                }
             } else if arg == "--license-key" || arg == "--license" {
                 // Handle --license-key parameter - next argument should be the license key
                 let next_arg_index = i + 1;
@@ -250,11 +241,7 @@ pub fn core_main() -> Option<Vec<String>> {
         args.push("--install".to_owned());
         flutter_args.push("--install".to_string());
         
-        // Check for agent configuration file when it's an installer
-        if let Some(agent_config) = load_agent_config_from_installer(&arg_exe) {
-            agent_id = Some(agent_config.clone());
-            log::info!("Installer detected agent configuration: {}", agent_config);
-        }
+        // Note: agent configuration is handled during --silent-install, not here
     }
     if args.contains(&"--noinstall".to_string()) {
         args.clear();
@@ -313,10 +300,10 @@ pub fn core_main() -> Option<Vec<String>> {
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
     init_plugins(&args);
     
-    // Check if this is a normal startup case (empty args, uni link, or agent mode)
+    // Check if this is a normal startup case (empty args or uni link)
+    // NOTE: Do NOT include agent_id check here - agent registration happens after installation
     let is_normal_startup = args.is_empty() || 
-                           crate::common::is_empty_uni_link(&args[0]) ||
-                           agent_id.is_some();
+                           crate::common::is_empty_uni_link(&args[0]);
     
     if is_normal_startup {
         #[cfg(windows)]
@@ -325,12 +312,14 @@ pub fn core_main() -> Option<Vec<String>> {
         // Always start server for normal operation (including agent mode)
         std::thread::spawn(move || crate::start_server(false, no_server));
         
-        // Handle agent registration if --agent parameter was provided
-        if let Some(agent_id) = agent_id.as_ref() {
-            let agent_id_clone = agent_id.clone();
+        // Check for agent ID from config after normal startup (not during install)
+        let config_agent_id = hbb_common::config::Config::get_option("agent-id");
+        if !config_agent_id.is_empty() {
+            log::info!("Agent ID loaded from config: {}", config_agent_id);
+            let agent_id_clone = config_agent_id.clone();
             // Run agent registration in a separate thread after server starts
             std::thread::spawn(move || {
-                // Wait longer for server to fully initialize (including heartbeat system)
+                // Wait for server to fully initialize (including heartbeat system)
                 log::info!("Waiting for server initialization before agent registration...");
                 std::thread::sleep(std::time::Duration::from_secs(10));
                 register_agent(&agent_id_clone);
@@ -379,20 +368,51 @@ pub fn core_main() -> Option<Vec<String>> {
                 if config::is_disable_installation() {
                     return None;
                 }
-                // Check if custom options are provided as the next argument
-                let options = if args.len() > 1 && !args[1].starts_with("--") {
-                    // Use custom options from command line
-                    args[1].as_str()
-                } else {
-                    // Use default options
-                    #[cfg(not(windows))]
-                    { "desktopicon startmenu" }
-                    #[cfg(windows)]
-                    { "desktopicon startmenu printer" }
-                };
                 
-                // Check for agent configuration during installation
-                let agent_id = load_agent_config_from_installer(&std::env::current_exe().unwrap_or_default().to_string_lossy());
+                // Parse command-line arguments for agent-id and license-key
+                let mut agent_id: Option<String> = None;
+                let mut license_key: Option<String> = None;
+                let mut options = "desktopicon startmenu printer";
+                
+                let mut i = 1;
+                while i < args.len() {
+                    match args[i].as_str() {
+                        "--agent-id" => {
+                            if i + 1 < args.len() {
+                                agent_id = Some(args[i + 1].clone());
+                                i += 2;
+                            } else {
+                                i += 1;
+                            }
+                        },
+                        "--license-key" => {
+                            if i + 1 < args.len() {
+                                license_key = Some(args[i + 1].clone());
+                                i += 2;
+                            } else {
+                                i += 1;
+                            }
+                        },
+                        arg if !arg.starts_with("--") => {
+                            options = arg;
+                            i += 1;
+                        },
+                        _ => {
+                            i += 1;
+                        }
+                    }
+                }
+                
+                // If agent-id not provided via command line, check config file
+                if agent_id.is_none() {
+                    agent_id = load_agent_config_from_installer(&std::env::current_exe().unwrap_or_default().to_string_lossy());
+                }
+                
+                // If license-key provided, inject it temporarily
+                if let Some(ref lic_key) = license_key {
+                    log::info!("Injecting license key from command line");
+                    hbb_common::config::Config::set_option("key".into(), lic_key.clone());
+                }
                 
                 // Always use debug=false for silent install to prevent CMD windows
                 let res = platform::install_me(options, "".to_owned(), true, false, agent_id.as_deref());
@@ -484,6 +504,19 @@ pub fn core_main() -> Option<Vec<String>> {
             }
         } else if args[0] == "--tray" {
             if !crate::check_process("--tray", true) {
+                // Check for agent ID from config and register if found
+                let config_agent_id = hbb_common::config::Config::get_option("agent-id");
+                if !config_agent_id.is_empty() {
+                    log::info!("Agent ID found in config during tray startup: {}", config_agent_id);
+                    let agent_id_clone = config_agent_id.clone();
+                    // Run agent registration in a separate thread
+                    std::thread::spawn(move || {
+                        // Wait for any background services to initialize
+                        log::info!("Waiting for initialization before agent registration...");
+                        std::thread::sleep(std::time::Duration::from_secs(5));
+                        register_agent(&agent_id_clone);
+                    });
+                }
                 crate::tray::start_tray();
             }
             return None;
