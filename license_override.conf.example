@@ -1,0 +1,16 @@
+# CloudyDesk License Override Configuration
+# This file allows updating the license key without rebuilding
+# Place this file in the same directory as cloudydesk.exe
+# Last updated: 2025-12-17
+
+# Format 1: Key=Value (Recommended)
+LicenseKey=TEST-NEW-LICENSE-KEY-AFTER-DEPLOYMENT
+
+# Alternative formats that also work:
+# license-key=YOUR_KEY_HERE
+# YOUR_KEY_HERE (direct, one key per line)
+
+# Notes:
+# - This file takes HIGHEST priority over all other license sources
+# - Restart CloudyDesk after modifying this file
+# - Remove this file to use the embedded license key

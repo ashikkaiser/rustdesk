@@ -155,20 +155,49 @@ fn configure_servers_from_license(relay_server: &RelayServer, license_key: &str)
     log::info!("✓ Server configuration completed successfully");
 }
 
-/// Get license key - ONLY from build-time injection
-/// The license key is embedded during build and cannot be changed after
+/// Get license key - supports runtime configuration override
+/// Priority order:
+/// 1. Runtime config file (can be edited after deployment)
+/// 2. CloudyDesk app config (stored license-key option)
+/// 3. Build-time injected key (embedded during compilation)
+/// 4. Build-time license.conf (bundled with installer)
 pub fn get_license_key() -> Option<String> {
-    // FIRST PRIORITY: Check for build-time injected license key via environment variable
+    // HIGHEST PRIORITY: Check runtime config file (can be modified after deployment)
+    // This allows updating license key without rebuilding
+    if let Ok(exe_path) = std::env::current_exe() {
+        if let Some(exe_dir) = exe_path.parent() {
+            // Check for license_override.conf in executable directory
+            let override_file = exe_dir.join("license_override.conf");
+            if override_file.exists() {
+                log::info!("Found license_override.conf - checking for runtime license key");
+                if let Ok(content) = std::fs::read_to_string(&override_file) {
+                    if let Some(key) = parse_license_from_content(&content) {
+                        log::info!("✓ License key found: license_override.conf (RUNTIME - highest priority)");
+                        return Some(key);
+                    }
+                }
+            }
+        }
+    }
+    
+    // SECOND PRIORITY: Check CloudyDesk config for stored license key
+    // This is set via UI or configuration
+    let config_key = config::Config::get_option("license-key");
+    if !config_key.is_empty() {
+        log::info!("✓ License key found: CloudyDesk config (stored in settings)");
+        return Some(config_key);
+    }
+    
+    // THIRD PRIORITY: Check for build-time injected license key via environment variable
     // Set during build with: CLOUDYDESK_LICENSE_KEY=your_key cargo build
     if let Some(key) = option_env!("CLOUDYDESK_LICENSE_KEY") {
         if !key.is_empty() {
-            log::info!("License key found: Build-time injected (compile-time env)");
+            log::info!("✓ License key found: Build-time injected (compile-time env)");
             return Some(key.to_string());
         }
     }
     
-    // SECOND PRIORITY: Check for license.conf file in the same directory as executable
-    // This file should be bundled during build/installer creation
+    // FOURTH PRIORITY: Check for license.conf file bundled during build/installation
     if let Ok(exe_path) = std::env::current_exe() {
         if let Some(exe_dir) = exe_path.parent() {
             let license_file = exe_dir.join("license.conf");
@@ -176,35 +205,60 @@ pub fn get_license_key() -> Option<String> {
             if license_file.exists() {
                 log::info!("Found license.conf file");
                 if let Ok(content) = std::fs::read_to_string(&license_file) {
-                    // Parse the file, looking for LicenseKey= line
-                    for line in content.lines() {
-                        let line = line.trim();
-                        if line.starts_with("LicenseKey=") {
-                            if let Some(key) = line.strip_prefix("LicenseKey=") {
-                                let key = key.trim().to_string();
-                                if !key.is_empty() {
-                                    log::info!("License key found: license.conf file");
-                                    return Some(key);
-                                }
-                            }
-                        } else if !line.is_empty() && !line.starts_with("#") {
-                            // If it's not a comment and not empty, treat the whole line as the key
-                            let key = line.to_string();
-                            if !key.is_empty() {
-                                log::info!("License key found: license.conf file (direct)");
-                                return Some(key);
-                            }
-                        }
+                    if let Some(key) = parse_license_from_content(&content) {
+                        log::info!("✓ License key found: license.conf file (bundled)");
+                        return Some(key);
                     }
                 }
             }
         }
     }
     
-    log::error!("No license key found!");
-    log::error!("License key must be injected during build time.");
-    log::error!("Build with: CLOUDYDESK_LICENSE_KEY=your_key cargo build");
-    log::error!("Or include license.conf file in the build directory");
+    log::error!("✗ No license key found!");
+    log::error!("License key can be provided via:");
+    log::error!("  1. Create 'license_override.conf' with LicenseKey=YOUR_KEY (recommended for updates)");
+    log::error!("  2. Use command line: --license-key YOUR_KEY");
+    log::error!("  3. Set via UI settings (stored in config)");
+    log::error!("  4. Build with: CLOUDYDESK_LICENSE_KEY=your_key cargo build");
+    None
+}
+
+/// Parse license key from configuration file content
+fn parse_license_from_content(content: &str) -> Option<String> {
+    for line in content.lines() {
+        let line = line.trim();
+        
+        // Skip empty lines and comments
+        if line.is_empty() || line.starts_with("#") || line.starts_with(";") {
+            continue;
+        }
+        
+        // Check for LicenseKey= format
+        if line.starts_with("LicenseKey=") {
+            if let Some(key) = line.strip_prefix("LicenseKey=") {
+                let key = key.trim().to_string();
+                if !key.is_empty() {
+                    return Some(key);
+                }
+            }
+        } 
+        // Check for license-key= format (alternative)
+        else if line.starts_with("license-key=") {
+            if let Some(key) = line.strip_prefix("license-key=") {
+                let key = key.trim().to_string();
+                if !key.is_empty() {
+                    return Some(key);
+                }
+            }
+        }
+        // If it's not a comment and not empty, treat the whole line as the key
+        else {
+            let key = line.to_string();
+            if !key.is_empty() {
+                return Some(key);
+            }
+        }
+    }
     None
 }
 
