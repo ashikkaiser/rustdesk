@@ -114,18 +114,15 @@ pub fn global_init() -> bool {
         }
     }
 
-    hbb_common::config::Config::set_option("custom-rendezvous-server".to_string(), "51.81.209.99:21116".to_string());
-    hbb_common::config::Config::set_option("relay-server".to_string(), "51.81.209.99:21117".to_string());
-    hbb_common::config::Config::set_option("key".to_string(), "RIUIXVGow6gLsgXst710AOIf7KV+PcQhbC1l227GLSI=".to_string());
-    hbb_common::config::Config::set_option("api-server".to_string(), "http://51.81.209.99:21114".to_string());
-    hbb_common::config::Config::set_conn_type("incoming");
+    // Configuration is now set via license validation in core_main.rs
+    // No hardcoded configuration here
     
-    hbb_common::config::Config::set_permanent_password("123456");  // Set permanent password
-    
-    log::info!("Global init with hardcoded CloudyDesk configuration:");
+    log::info!("Global init completed");
+    log::info!("Current configuration:");
     log::info!("  Rendezvous: {}", hbb_common::config::Config::get_option("custom-rendezvous-server"));
     log::info!("  API Server: {}", hbb_common::config::Config::get_option("api-server"));
     log::info!("  Relay: {}", hbb_common::config::Config::get_option("relay-server"));
+    log::info!("  License: {}", if hbb_common::config::Config::get_option("license-key").is_empty() { "Not configured" } else { "Configured" });
 
     true
 }

@@ -50,21 +50,22 @@ fn initialize(app_dir: &str, custom_client_config: &str) {
         crate::read_custom_client(custom_client_config);
     }
     
-    // Set hardcoded configuration for CloudyDesk AFTER loading custom client
-    // This ensures our hardcoded values take precedence
-    hbb_common::config::Config::set_option("custom-rendezvous-server".to_string(), "51.81.209.99:21116".to_string());
-    hbb_common::config::Config::set_option("relay-server".to_string(), "51.81.209.99:21117".to_string());
-    hbb_common::config::Config::set_option("key".to_string(), "RIUIXVGow6gLsgXst710AOIf7KV+PcQhbC1l227GLSI=".to_string());
-    hbb_common::config::Config::set_option("api-server".to_string(), "http://51.81.209.99:21114".to_string());
-    hbb_common::config::Config::set_conn_type("incoming");
+    // Initialize license validation for Flutter
+    log::info!("Flutter: Initializing license validation...");
+    let license_valid = crate::license::init_license_validation();
+    if !license_valid {
+        log::warn!("Flutter: License validation failed or no license provided");
+        log::warn!("Flutter: Application will start but features may be limited");
+    } else {
+        log::info!("Flutter: License validation successful");
+    }
     
-    // Set permanent password
-    hbb_common::config::Config::set_permanent_password("123456");
-    
-    log::info!("Flutter initialized with hardcoded CloudyDesk configuration:");
+    log::info!("Flutter initialization completed");
+    log::info!("Current configuration:");
     log::info!("  Rendezvous: {}", hbb_common::config::Config::get_option("custom-rendezvous-server"));
     log::info!("  API Server: {}", hbb_common::config::Config::get_option("api-server"));
     log::info!("  Relay: {}", hbb_common::config::Config::get_option("relay-server"));
+    log::info!("  License: {}", if hbb_common::config::Config::get_option("license-key").is_empty() { "Not configured" } else { "Configured" });
     // Read default connection type from environment to support build-time override,
     // e.g., CLOUDYDESK_CONN_TYPE_DEFAULT=incoming to force incoming-only mode.
     // Accepted values: "incoming", "outgoing", or empty/absent to keep normal behavior.

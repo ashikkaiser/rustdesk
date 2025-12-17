@@ -94,6 +94,17 @@ def parse_rc_features(feature):
         raise Exception(f'Unsupported features param {feature}')
 
 
+def set_license_key_env(license_key):
+    """Set the license key as environment variable for cargo build"""
+    if license_key:
+        os.environ['CLOUDYDESK_LICENSE_KEY'] = license_key
+        print(f'License key injected: {license_key[:10]}...')
+    else:
+        # Remove if exists
+        if 'CLOUDYDESK_LICENSE_KEY' in os.environ:
+            del os.environ['CLOUDYDESK_LICENSE_KEY']
+
+
 def make_parser():
     parser = argparse.ArgumentParser(description='Build script.')
     parser.add_argument(
@@ -143,6 +154,11 @@ def make_parser():
     parser.add_argument(
         "--package",
         type=str
+    )
+    parser.add_argument(
+        '--license-key',
+        type=str,
+        help='Inject license key at build time (embedded in binary)'
     )
     if osx:
         parser.add_argument(
@@ -249,6 +265,72 @@ def download_extract_features(features, res_dir):
                 print(f'{feat} extract end')
 
 
+def download_amyuni_idd_driver():
+    """Download Amyuni USB Mobile Monitor IDD driver for virtual display support."""
+    driver_dir = 'usbmmidd_v2'
+    
+    # Check if driver already exists
+    if os.path.exists(driver_dir):
+        print(f'Amyuni IDD driver already exists at {driver_dir}')
+        return True
+    
+    # Amyuni IDD driver download URL - official source
+    # Can be overridden with AMYUNI_DRIVER_URL environment variable
+    driver_url = os.environ.get('AMYUNI_DRIVER_URL', 'https://www.amyuni.com/downloads/usbmmidd_v2.zip')
+    
+    if not driver_url:
+        print('INFO: Using default Amyuni driver URL: https://www.amyuni.com/downloads/usbmmidd_v2.zip')
+        print('You can override this with AMYUNI_DRIVER_URL environment variable')
+    
+    try:
+        print(f'Downloading Amyuni IDD driver from {driver_url}...')
+        driver_zip = 'usbmmidd_v2.zip'
+        
+        # Download the driver package
+        filename, _headers = urllib.request.urlretrieve(driver_url, driver_zip)
+        print('Download completed. Extracting...')
+        
+        # Extract the driver files
+        with zipfile.ZipFile(filename, 'r') as zip_ref:
+            zip_ref.extractall('.')
+        
+        os.remove(driver_zip)
+        
+        # The zip contains a usbmmidd_v2 folder, but we may already have one
+        # Check if extraction created a nested structure
+        if os.path.exists('usbmmidd_v2/usbmmidd_v2'):
+            # Nested structure - move inner folder to root
+            import tempfile
+            temp_dir = tempfile.mkdtemp()
+            shutil.move('usbmmidd_v2/usbmmidd_v2', temp_dir)
+            shutil.rmtree('usbmmidd_v2')
+            shutil.move(os.path.join(temp_dir, 'usbmmidd_v2'), '.')
+            os.rmdir(temp_dir)
+        
+        print(f'Amyuni IDD driver extracted to {driver_dir}')
+        
+        # Verify required files exist
+        required_files = ['deviceinstaller64.exe', 'usbmmIdd.inf']
+        missing_files = []
+        for file in required_files:
+            if not os.path.exists(os.path.join(driver_dir, file)):
+                missing_files.append(file)
+        
+        if missing_files:
+            print(f'WARNING: Missing required driver files: {", ".join(missing_files)}')
+            return False
+        
+        print('Amyuni IDD driver downloaded and verified successfully')
+        return True
+        
+    except Exception as e:
+        print(f'ERROR: Failed to download Amyuni IDD driver: {e}')
+        print('Virtual Display privacy mode will not be available.')
+        if os.path.exists(driver_zip):
+            os.remove(driver_zip)
+        return False
+
+
 def external_resources(flutter, args, res_dir):
     features = parse_rc_features(args.feature)
     if not features:
@@ -317,9 +399,9 @@ def ffi_bindgen_function_refactor():
 
 def build_flutter_deb(version, features):
     if not skip_cargo:
-        # Force incoming-only mode in Flutter builds by default
+        # Force incoming mode for agent builds (devices to be controlled)
         os.environ['CLOUDYDESK_CONN_TYPE_DEFAULT'] = os.environ.get('CLOUDYDESK_CONN_TYPE_DEFAULT', 'incoming')
-        # Enable silent accept for kiosk/incoming builds unless explicitly disabled
+        # Enable silent accept for agent builds unless explicitly disabled
         os.environ['CLOUDYDESK_AUTO_APPROVE'] = os.environ.get('CLOUDYDESK_AUTO_APPROVE', 'Y')
         system2(f'cargo build --features {features} --lib --release')
         ffi_bindgen_function_refactor()
@@ -426,7 +508,7 @@ def build_flutter_dmg(version, features):
 
 def build_flutter_arch_manjaro(version, features):
     if not skip_cargo:
-        # Force incoming-only mode in Flutter builds by default
+        # Force incoming mode for agent builds (devices to be controlled)
         os.environ['CLOUDYDESK_CONN_TYPE_DEFAULT'] = os.environ.get('CLOUDYDESK_CONN_TYPE_DEFAULT', 'incoming')
         os.environ['CLOUDYDESK_AUTO_APPROVE'] = os.environ.get('CLOUDYDESK_AUTO_APPROVE', 'Y')
         system2(f'cargo build --features {features} --lib --release')
@@ -439,8 +521,12 @@ def build_flutter_arch_manjaro(version, features):
 
 
 def build_flutter_windows(version, features, skip_portable_pack):
+    # Download Amyuni IDD driver for virtual display support (Windows only)
+    print('Checking for Amyuni IDD driver...')
+    driver_available = download_amyuni_idd_driver()
+    
     if not skip_cargo:
-        # Force incoming-only mode in Flutter builds by default
+        # Force incoming mode for agent builds (devices to be controlled)
         os.environ['CLOUDYDESK_CONN_TYPE_DEFAULT'] = os.environ.get('CLOUDYDESK_CONN_TYPE_DEFAULT', 'incoming')
         os.environ['CLOUDYDESK_AUTO_APPROVE'] = os.environ.get('CLOUDYDESK_AUTO_APPROVE', 'Y')
         # Enable silent installation for Flutter builds
@@ -491,6 +577,26 @@ def build_flutter_windows(version, features, skip_portable_pack):
     
     shutil.copy2('target/release/deps/dylib_virtual_display.dll',
                  flutter_build_dir_2)
+    
+    # Copy Amyuni IDD driver if available
+    if driver_available and os.path.exists('usbmmidd_v2'):
+        driver_dst_flutter = os.path.join(flutter_build_dir_2, 'usbmmidd_v2')
+        driver_dst_dist = os.path.join(dist_dir, 'usbmmidd_v2')
+        
+        # Copy to flutter build directory
+        if os.path.exists(driver_dst_flutter):
+            shutil.rmtree(driver_dst_flutter)
+        shutil.copytree('usbmmidd_v2', driver_dst_flutter)
+        print(f'Copied usbmmidd_v2 driver to {driver_dst_flutter}')
+        
+        # Copy to dist directory
+        if os.path.exists(driver_dst_dist):
+            shutil.rmtree(driver_dst_dist)
+        shutil.copytree('usbmmidd_v2', driver_dst_dist)
+        print(f'Copied usbmmidd_v2 driver to {driver_dst_dist}')
+    else:
+        print('WARNING: Virtual Display driver not available - privacy mode will be limited to overlay modes')
+    
     if skip_portable_pack:
         return
     os.chdir('libs/portable')
@@ -515,6 +621,14 @@ def main():
     global skip_cargo
     parser = make_parser()
     args = parser.parse_args()
+
+    # Set license key environment variable if provided
+    if hasattr(args, 'license_key') and args.license_key:
+        set_license_key_env(args.license_key)
+        print(f"Building with license key injection")
+    else:
+        print("WARNING: No license key provided. Application will not function without license.")
+        print("Use --license-key YOUR_KEY to inject license at build time")
 
     if os.path.exists(exe_path):
         os.unlink(exe_path)

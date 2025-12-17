@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 CloudyDesk Self-Extracting Agent NSIS Installer Generator
 This script creates a self-extracting NSIS installer that compresses everything 
@@ -10,19 +10,25 @@ import sys
 import subprocess
 from pathlib import Path
 
-def create_self_extracting_agent_installer(agent_id):
+def create_self_extracting_agent_installer(agent_id, no_shortcuts=False):
     """
     Create a self-extracting NSIS installer that compresses and extracts everything
+    
+    Args:
+        agent_id: The agent ID for this installation
+        no_shortcuts: If True, don't create desktop or start menu shortcuts
     """
     print("=" * 60)
     print("CloudyDesk Self-Extracting Agent NSIS Installer Generator")
     print("=" * 60)
     print()
-    print(f"🔨 Creating self-extracting NSIS agent installer for Agent ID: {agent_id}")
+    print(f"[*] Creating self-extracting NSIS agent installer for Agent ID: {agent_id}")
+    if no_shortcuts:
+        print("[!] Shortcuts will NOT be created (no desktop icon, no start menu entries)")
     
     # Validate inputs
     if not agent_id or not agent_id.strip():
-        print("❌ Error: Agent ID cannot be empty")
+        print(" Error: Agent ID cannot be empty")
         return False
     
     agent_id = agent_id.strip()
@@ -33,7 +39,7 @@ def create_self_extracting_agent_installer(agent_id):
     cloudydesk_exe = current_dir / "dist" / "cloudydesk.exe"
     
     if not cloudydesk_exe.exists():
-        print(f"❌ Error: CloudyDesk executable not found: {cloudydesk_exe}")
+        print(f" Error: CloudyDesk executable not found: {cloudydesk_exe}")
         print("   Please run: python build.py --flutter --skip-portable-pack")
         return False
     
@@ -43,10 +49,10 @@ def create_self_extracting_agent_installer(agent_id):
     output_exe = f"{installer_name}-setup.exe"
     config_file = f"{installer_name}.conf"
     
-    print(f"📁 Agent installer will be: {output_exe}")
+    print(f" Agent installer will be: {output_exe}")
     
     # Create agent config file
-    print(f"📄 Creating agent config: {config_file}")
+    print(f" Creating agent config: {config_file}")
     config_content = f"""[Agent]
 AgentID={agent_id}
 
@@ -59,13 +65,31 @@ SilentInstall=false
         f.write(config_content)
     
     # Create the self-extracting NSIS script
-    print(f"📝 Creating self-extracting NSIS script: {nsi_file}")
+    print(f" Creating self-extracting NSIS script: {nsi_file}")
+    
+    # Build the installation command
+    # --silent-install now accepts custom options as the next argument
+    # Options: autostart, desktopicon, startmenu, printer
+    
+    if no_shortcuts:
+        # Silent installation with NO shortcuts, but WITH autostart
+        install_command = '"$TEMP\\\\CloudyDeskExtract' + agent_id + '\\\\cloudydesk.exe" --silent-install autostart'
+        print("     Installation: Silent install with auto-start only, NO desktop/menu shortcuts")
+    else:
+        # Full installation with all shortcuts and autostart
+        install_command = '"$TEMP\\\\CloudyDeskExtract' + agent_id + '\\\\cloudydesk.exe" --silent-install "autostart desktopicon startmenu"'
+        print("     Installation: Full silent install with all shortcuts and auto-start")
+    
     nsis_script = f'''!include "MUI2.nsh"
 
 ; Installer settings
 Name "CloudyDesk Agent {agent_id}"
 OutFile "{output_exe}"
 RequestExecutionLevel admin
+
+; Silent installation - hide installer UI and suppress CMD windows
+SilentInstall silent
+ShowInstDetails hide
 
 ; Enable maximum compression for the archive
 SetCompressor /SOLID lzma
@@ -91,7 +115,7 @@ VIAddVersionKey "FileDescription" "CloudyDesk Remote Desktop Agent (Self-Extract
 VIAddVersionKey "FileVersion" "1.4.2.0"
 VIAddVersionKey "ProductVersion" "1.4.2.0"
 VIAddVersionKey "CompanyName" "CloudyDesk"
-VIAddVersionKey "LegalCopyright" "© 2024 CloudyDesk. All rights reserved."
+VIAddVersionKey "LegalCopyright" " 2024 CloudyDesk. All rights reserved."
 
 Section "MainSection" SEC01
     ; Create extraction directory
@@ -130,8 +154,10 @@ Section "MainSection" SEC01
     ; Set current directory to extraction folder - CRITICAL for XCOPY
     SetOutPath "$TEMP\\CloudyDeskExtract{agent_id}"
     
-    ; Run silent installation
-    ExecWait '"$TEMP\\CloudyDeskExtract{agent_id}\\cloudydesk.exe" --silent-install' $0
+    ; Run silent installation with completely hidden window (no CMD popup, no console)
+    ; Using nsExec::ExecToLog with /TIMEOUT to suppress all windows
+    nsExec::ExecToLog /TIMEOUT=30000 '{install_command}'
+    Pop $0
     
     DetailPrint "CloudyDesk installer exit code: $0"
     Sleep 3000
@@ -170,7 +196,7 @@ SectionEnd
         f.write(nsis_script.strip())
     
     # Check if NSIS (makensis) is available
-    print("🔍 Checking for NSIS (makensis)...")
+    print(" Checking for NSIS (makensis)...")
     
     # Check multiple possible locations for makensis
     makensis_locations = [
@@ -187,19 +213,19 @@ SectionEnd
                                   capture_output=True, text=True, timeout=10)
             if result.returncode == 0:
                 makensis_path = location
-                print(f"✅ NSIS found at: {location}")
+                print(f" NSIS found at: {location}")
                 break
         except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
             continue
     
     if not makensis_path:
-        print("❌ Error: NSIS (makensis) not found!")
+        print(" Error: NSIS (makensis) not found!")
         print("   Please install NSIS from: https://nsis.sourceforge.io/")
         print("   Or ensure makensis.exe is in your PATH")
         return False
     
     # Create the installer with NSIS
-    print("🔨 Creating self-extracting installer with NSIS...")
+    print(" Creating self-extracting installer with NSIS...")
     try:
         result = subprocess.run([makensis_path, nsi_file], 
                               capture_output=True, text=True, timeout=180)
@@ -208,32 +234,41 @@ SectionEnd
             # Check if installer was created
             if Path(output_exe).exists():
                 file_size = Path(output_exe).stat().st_size / (1024 * 1024)  # MB
-                print(f"✅ Success! Self-extracting installer created: {output_exe}")
-                print(f"📁 File size: {file_size:.1f} MB")
-                print(f"📄 Agent config file: {config_file}")
-                print(f"📄 NSIS script: {nsi_file}")
+                print(f" Success! Self-extracting installer created: {output_exe}")
+                print(f" File size: {file_size:.1f} MB")
+                print(f" Agent config file: {config_file}")
+                print(f" NSIS script: {nsi_file}")
                 print()
-                print("🎉 Self-extracting NSIS agent installer ready!")
+                print(" Self-extracting NSIS agent installer ready!")
                 print(f"Agent ID: {agent_id}")
+                if no_shortcuts:
+                    print(" Shortcuts: DISABLED (no desktop icon, no start menu)")
+                else:
+                    print(" Shortcuts: Will be created (desktop + start menu)")
                 print()
                 print("Features:")
-                print("✅ Self-extracting compressed archive")
-                print("✅ Preserves complete directory structure")
-                print("✅ Uses CloudyDesk's built-in installer")
-                print("✅ Automatic Windows integration")
-                print("✅ Agent configuration included")
-                print("✅ Data folder preservation")
+                print(" Self-extracting compressed archive")
+                print(" Preserves complete directory structure")
+                print(" Uses CloudyDesk's built-in installer")
+                print(" Automatic Windows integration")
+                print(" Agent configuration included")
+                print(" Data folder preservation")
+                if no_shortcuts:
+                    print(" No desktop or start menu shortcuts")
                 print()
                 print("Instructions:")
                 print(f"1. Run: {output_exe}")
                 print("2. Files will be extracted and CloudyDesk installed automatically")
-                print("3. All Windows integration handled by CloudyDesk's installer")
+                if no_shortcuts:
+                    print("3. No shortcuts will be created (silent background agent)")
+                else:
+                    print("3. Desktop and Start Menu shortcuts will be created")
                 return True
             else:
-                print(f"❌ Error: Installer file was not created: {output_exe}")
+                print(f" Error: Installer file was not created: {output_exe}")
                 return False
         else:
-            print(f"❌ Error: NSIS compilation failed!")
+            print(f" Error: NSIS compilation failed!")
             print(f"Exit code: {result.returncode}")
             if result.stdout:
                 print(f"Output: {result.stdout}")
@@ -241,27 +276,59 @@ SectionEnd
                 print(f"Error: {result.stderr}")
             return False
     except subprocess.TimeoutExpired:
-        print("❌ Error: NSIS compilation timed out!")
+        print(" Error: NSIS compilation timed out!")
         return False
     except Exception as e:
-        print(f"❌ Error during NSIS compilation: {e}")
+        print(f" Error during NSIS compilation: {e}")
         return False
 
 def main():
-    if len(sys.argv) != 2:
-        print()
-        print("Usage: python create_self_extracting_agent_installer.py <AGENT_ID>")
-        print()
-        print("Example:")
-        print("  python create_self_extracting_agent_installer.py AGENT-001")
-        print()
+    import argparse
+    parser = argparse.ArgumentParser(description='Create CloudyDesk agent installer with embedded license key')
+    parser.add_argument('--agent-id', required=True, help='Agent ID for this build')
+    parser.add_argument('--license-key', required=True, help='License key to embed in the build')
+    parser.add_argument('--with-shortcuts', action='store_true', help='Create desktop and start menu shortcuts (default: NO shortcuts, auto-start only)')
+    
+    args = parser.parse_args()
+    
+    # First, build with the license key
+    print("=" * 60)
+    print("Step 1: Building CloudyDesk with embedded license key")
+    print("=" * 60)
+    
+    build_cmd = ['python', 'build.py', '--flutter', '--skip-portable-pack', '--license-key', args.license_key]
+    print(f"Running: {' '.join(build_cmd)}")
+    
+    result = subprocess.run(build_cmd)
+    if result.returncode != 0:
+        print(" Build failed!")
         sys.exit(1)
     
-    agent_id = sys.argv[1]
-    success = create_self_extracting_agent_installer(agent_id)
+    print()
+    print("=" * 60)
+    print("Step 2: Creating agent installer")
+    print("=" * 60)
+    
+    # Now create the agent installer
+    # Invert the logic: --with-shortcuts flag means shortcuts enabled
+    no_shortcuts = not args.with_shortcuts
+    success = create_self_extracting_agent_installer(args.agent_id, no_shortcuts)
     
     if not success:
         sys.exit(1)
+    
+    print()
+    print("=" * 60)
+    print(" COMPLETE: Agent installer created successfully!")
+    print("=" * 60)
+    print(f"Agent ID: {args.agent_id}")
+    print(f"License Key: {args.license_key[:10]}...")
+    print(f"Shortcuts: {'ENABLED (desktop + start menu)' if args.with_shortcuts else 'DISABLED (auto-start only)'}")
+    print(f"Installer: cloudydesk-agent-{args.agent_id.lower().replace(' ', '-').replace('_', '-')}-setup.exe")
+    print()
+    print("This installer has the license key embedded and cannot be changed after build.")
+    print("Default: NO shortcuts, only auto-start on boot (use --with-shortcuts to enable shortcuts)")
 
 if __name__ == "__main__":
     main()
+

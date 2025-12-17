@@ -26,6 +26,8 @@ pub mod win_topmost_window;
 pub mod win_direct_overlay;
 #[cfg(windows)]
 pub mod win_gif_overlay;
+#[cfg(windows)]
+pub mod win_separate_desktop;
 
 #[cfg(windows)]
 mod win_virtual_display;
@@ -44,6 +46,7 @@ pub const PRIVACY_MODE_IMPL_WIN_EXCLUDE_FROM_CAPTURE: &str =
 pub const PRIVACY_MODE_IMPL_WIN_VIRTUAL_DISPLAY: &str = "privacy_mode_impl_virtual_display";
 pub const PRIVACY_MODE_IMPL_WIN_DIRECT_OVERLAY: &str = "privacy_mode_impl_direct_overlay";
 pub const PRIVACY_MODE_IMPL_WIN_GIF_OVERLAY: &str = "privacy_mode_impl_gif_overlay";
+pub const PRIVACY_MODE_IMPL_WIN_SEPARATE_DESKTOP: &str = "privacy_mode_impl_separate_desktop";
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(tag = "t", content = "c")]
@@ -141,17 +144,24 @@ lazy_static::lazy_static! {
         let mut map: HashMap<&'static str, PrivacyModeCreator> = HashMap::new();
         #[cfg(windows)]
         {
-            // Add the new direct overlay mode (Mode 0)
+            // Add the direct overlay mode (Mode 0 - black screen)
             if win_direct_overlay::is_supported() {
                 map.insert(win_direct_overlay::PRIVACY_MODE_IMPL, |impl_key: &str| {
                     Box::new(win_direct_overlay::DirectOverlayPrivacyMode::new(impl_key))
                 });
             }
 
-            // Add the GIF overlay mode
+            // Add the GIF overlay mode (Mode 1 - animated privacy screen)
             if win_gif_overlay::is_supported() {
                 map.insert(win_gif_overlay::PRIVACY_MODE_IMPL, |impl_key: &str| {
                     Box::new(win_gif_overlay::GifOverlayPrivacyMode::new(impl_key))
+                });
+            }
+
+            // Add the separate desktop mode (Mode 2 - isolated desktop) ⭐ RECOMMENDED
+            if win_separate_desktop::is_supported() {
+                map.insert(win_separate_desktop::PRIVACY_MODE_IMPL, |impl_key: &str| {
+                    Box::new(win_separate_desktop::SeparateDesktopPrivacyMode::new(impl_key))
                 });
             }
 
@@ -347,7 +357,7 @@ pub fn get_supported_privacy_mode_impl() -> Vec<(&'static str, &'static str)> {
     {
         let mut vec_impls = Vec::new();
 
-        // Add the new direct overlay mode (Mode 0) as the first option
+        // Add the direct overlay mode (Mode 0) - black screen
         if win_direct_overlay::is_supported() {
             log::info!("Adding direct overlay mode (Mode 0): {}", PRIVACY_MODE_IMPL_WIN_DIRECT_OVERLAY);
             vec_impls.push((
@@ -358,7 +368,7 @@ pub fn get_supported_privacy_mode_impl() -> Vec<(&'static str, &'static str)> {
             log::warn!("Direct overlay mode not supported");
         }
 
-        // Add the GIF overlay mode (Mode 1)
+        // Add the GIF overlay mode (Mode 1) - animated privacy screen
         if win_gif_overlay::is_supported() {
             log::info!("Adding GIF overlay mode (Mode 1): {}", PRIVACY_MODE_IMPL_WIN_GIF_OVERLAY);
             vec_impls.push((
@@ -367,6 +377,17 @@ pub fn get_supported_privacy_mode_impl() -> Vec<(&'static str, &'static str)> {
             ));
         } else {
             log::warn!("GIF overlay mode not supported");
+        }
+
+        // Add the separate desktop mode (Mode 2) - isolated desktop ⭐ RECOMMENDED
+        if win_separate_desktop::is_supported() {
+            log::info!("Adding separate desktop mode (Mode 2): {}", PRIVACY_MODE_IMPL_WIN_SEPARATE_DESKTOP);
+            vec_impls.push((
+                PRIVACY_MODE_IMPL_WIN_SEPARATE_DESKTOP,
+                "privacy_mode_impl_separate_desktop_tip",
+            ));
+        } else {
+            log::warn!("Separate desktop mode not supported");
         }
 
         if win_exclude_from_capture::is_supported() {

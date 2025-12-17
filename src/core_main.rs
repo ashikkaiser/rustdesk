@@ -135,6 +135,15 @@ pub fn core_main() -> Option<Vec<String>> {
         // return None to terminate the process
         return None;
     }
+    
+    // Initialize license validation FIRST (before parsing args)
+    log::info!("Attempting license validation...");
+    let license_valid = crate::license::init_license_validation();
+    if !license_valid {
+        log::warn!("License validation failed or no license provided");
+        // Don't stop here - allow passing --license-key as command line arg
+    }
+    
     let mut args = Vec::new();
     let mut flutter_args = Vec::new();
     let mut i = 0;
@@ -177,6 +186,18 @@ pub fn core_main() -> Option<Vec<String>> {
                 if next_arg_index < env_args.len() {
                     agent_id = Some(env_args[next_arg_index].clone());
                     log::info!("Agent ID detected: {}", agent_id.as_ref().unwrap());
+                }
+            } else if arg == "--license-key" || arg == "--license" {
+                // Handle --license-key parameter - next argument should be the license key
+                let next_arg_index = i + 1;
+                let env_args: Vec<String> = std::env::args().collect();
+                if next_arg_index < env_args.len() {
+                    let license_key = env_args[next_arg_index].clone();
+                    log::info!("License key provided via command line");
+                    // Re-validate with the new license key
+                    if let Err(e) = crate::license::validate_and_configure_license(&license_key) {
+                        log::error!("License validation failed: {}", e);
+                    }
                 }
             } else {
                 args.push(arg);
@@ -358,15 +379,23 @@ pub fn core_main() -> Option<Vec<String>> {
                 if config::is_disable_installation() {
                     return None;
                 }
-                #[cfg(not(windows))]
-                let options = "desktopicon startmenu";
-                #[cfg(windows)]
-                let options = "desktopicon startmenu printer";
+                // Check if custom options are provided as the next argument
+                let options = if args.len() > 1 && !args[1].starts_with("--") {
+                    // Use custom options from command line
+                    args[1].as_str()
+                } else {
+                    // Use default options
+                    #[cfg(not(windows))]
+                    { "desktopicon startmenu" }
+                    #[cfg(windows)]
+                    { "desktopicon startmenu printer" }
+                };
                 
                 // Check for agent configuration during installation
                 let agent_id = load_agent_config_from_installer(&std::env::current_exe().unwrap_or_default().to_string_lossy());
                 
-                let res = platform::install_me(options, "".to_owned(), true, args.len() > 1, agent_id.as_deref());
+                // Always use debug=false for silent install to prevent CMD windows
+                let res = platform::install_me(options, "".to_owned(), true, false, agent_id.as_deref());
                 let text = match res {
                     Ok(_) => translate("Installation Successful!".to_string()),
                     Err(err) => {
